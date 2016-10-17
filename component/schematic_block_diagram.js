@@ -15,29 +15,29 @@ import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors';
 import IconMenu from 'material-ui/IconMenu';
-import * as a from '../reducer/action/schematic_block_diagram';
+import * as r from '../reducer/action/schematic_block_diagram';
 
 
 let define_visual_nodes= (root, data)=>
 {
+    let start_node = {id:"n_s", type:10, next: "", child: root, expanded: true, name:"start" };
+    let end_node = {id:"n_e", name:"end", type:10, expand_state: 0, next:"", child: ""};
+
     let stack = [];
     let level_stack = [];
     let level = 1;
-    stack.push(data[root]);
+    stack.push(start_node);
     level_stack.push(level);
     let x = 1;
     let y = 1;
-
     let v_nodes = {};
-
-    let end_node = {id:"0000", name:"end", type:10, expand_state: 0, next:"", child: ""};
-
 
     while (stack.length > 0)
     {
         let n = stack.pop();
         let l = level_stack.pop();
         x = l;
+        let next = n["next"];
         if(l != level)
         {
             y += 1
@@ -47,16 +47,16 @@ let define_visual_nodes= (root, data)=>
             y += 2;
         }
         level = l;
-        if (n["next"] == "")
+        if (n["next"] == '')
         {
             if(stack.length > 0)
             {
-                n["next"] = stack[stack.length - 1]["id"];
+                next = stack[stack.length - 1]["id"];
             }
         }
         else
         {
-            stack.push(data["n_" + n["next"]]);
+            stack.push(data[n["next"]]);
             level_stack.push(l);
         }
         let expand_state = 0;// none, open, close
@@ -64,7 +64,7 @@ let define_visual_nodes= (root, data)=>
         {
             if(n["expanded"])
             {
-                stack.push(data["n_" + n["child"]]);
+                stack.push(data[n["child"]]);
                 level_stack.push(l + 1);
                 expand_state = 1;
             }
@@ -79,16 +79,18 @@ let define_visual_nodes= (root, data)=>
         }
         if(stack.length == 0)
         {
-            n["next"] = "0000";
+            next = "n_e";
         }
 
 
-
-        v_nodes["n_" + n["id"]] = {id: n["id"], name: n["name"], type: n["type"], x: x, y: y, expand_state: expand_state, next:n["next"], child: n["child"]};
+        
+        v_nodes[n["id"]] = {id: n["id"], name: n["name"], type: n["type"], x: x, y: y, expand_state: expand_state, next:next, child: n["child"]};
     }
+
+
     end_node["y"] = y + 1;
     end_node["x"] = 1;
-    v_nodes["n_" + end_node["id"]] = end_node;
+    v_nodes[end_node["id"]] = end_node;
     return v_nodes;
 }
 let get_all_values = (obj)=>
@@ -126,12 +128,14 @@ class generator extends React.Component {
 
     componentDidMount(){
 
-        debugger;
+        console.log("mount");
 
-        console.log(this.props);
+        this.componentDidUpdate();
+    }
+    componentDidUpdate() {
+        console.log("on update");
 
-
-        let nodes = define_visual_nodes("n_1", this.props["nodes"]);
+        let nodes = define_visual_nodes(this.props["root_element"], this.props["nodes"]);
         let data = get_all_values(nodes);
 
         let circleRadius = 10;
@@ -156,11 +160,11 @@ class generator extends React.Component {
             .attr("class","arrowHead");
 
         svg.selectAll(".child_link")
-            .data(data.filter((d)=>{return d["child"] != "" && nodes.hasOwnProperty("n_" + d["child"])} ))
+            .data(data.filter((d)=>{return d["child"] != "" && nodes.hasOwnProperty(d["child"])} ))
             .enter()
             .append("path")
             .attr("d", (d)=>{
-                let to = nodes["n_" + d["child"]];
+                let to = nodes[d["child"]];
 
                 let result = "M " + (d.x  * 30 + 50) + " " + (d.y * 20 + 50);
                 //result += " L " + (d.x1 - 10) + " " + (d.y1 + 10);
@@ -178,11 +182,11 @@ class generator extends React.Component {
 
 
         svg.selectAll(".next_link")
-            .data(data.filter((d)=>{return d["next"] != "" && nodes.hasOwnProperty("n_" + d["next"])}))
+            .data(data.filter((d)=>{return d["next"] != "" && nodes.hasOwnProperty(d["next"])}))
             .enter()
             .append("path")
             .attr("d", (d)=>{
-                let to = nodes["n_" + d["next"]];
+                let to = nodes[d["next"]];
 
                 let result = "M " + (d.x  * 30 + 50) + " " + (d.y * 20 + 50);
                 //result += " L " + (d.x1 - 10) + " " + (d.y1 + 10);
@@ -202,18 +206,24 @@ class generator extends React.Component {
             .data(data)
             .enter()
             .append("circle")
-            .attr("class", "op")
+            .attr("class", (d)=>{ return d.id == this.props.sel_node ? 'op_clicked': 'op'})
             .attr("r", circleRadius)
             .attr("cx", function(d) { return d.x * 30 + 50; })
             .attr("cy", function(d) { return d.y * 20 + 50; })
             .on("click", function(d){
-                let el = d3.select(this);
-                if(el.attr("class") == "op"){
-                    el.attr("class", "op_clicked");
-                }
-                else {
-                    el.attr("class", "op");
-                }
+                // this - элемент
+                console.log(d);
+
+                r.a.select_node(d.id);
+
+                /*
+                 let el = d3.select(this);
+                 if(el.attr("class") == "op"){
+                 el.attr("class", "op_clicked");
+                 }
+                 else {
+                 el.attr("class", "op");
+                 }*/
             })
             .on("dblclick", function(){alert("ok")})
             .on("contextmenu", function (d, i) {
@@ -234,24 +244,19 @@ class generator extends React.Component {
             .attr("font-family", "sans-serif")
             //.attr("text-anchor", "middle")
             .attr("fill", "white");
-
-
-
-        //this.componentDidUpdate();
-    }
-
-    componentDidUpdate() {
-
     }
 
     componentWillUnmount() {
 
+        console.log("un mount");
     }
 }
 
 
 function map_state_to_props (state, own_pros) {
     let prop = Object.assign({common:state.common}, state.schematic_block_diagram);
+    console.log("new props");
+    console.log(prop);
     return prop;
 }
 

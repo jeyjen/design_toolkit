@@ -1,6 +1,7 @@
 'use strict';
 
-const NODE_ENV = process.env.NODE_ENV || 'development';
+const NODE_ENV = 'development';//process.env.NODE_ENV || 'development';
+
 const webpack = require('webpack');
 const AssetsPlugin = require('assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -28,7 +29,7 @@ module.exports = {
   watchOptions: {
     aggregateTimeout: 100
   },
-  devtool: NODE_ENV == 'development' ? "cheap-inline-module-source-map" : null,
+  devtool: NODE_ENV == 'development' ? "#sourcemap" : null,
   resolve: {
     modulesDirectories: ['node_modules'],
     extensions:         ['', '.js']
