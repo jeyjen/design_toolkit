@@ -28,7 +28,7 @@ module.exports = {
   watchOptions: {
     aggregateTimeout: 100
   },
-  devtool: NODE_ENV == 'development' ? "cheap-inline-module-source-map" : null,
+  devtool: NODE_ENV == 'development' ? "source-map" : null,
   resolve: {
     modulesDirectories: ['node_modules'],
     extensions:         ['', '.js']

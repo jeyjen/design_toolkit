@@ -18,53 +18,63 @@ import IconMenu from 'material-ui/IconMenu';
 import * as a from '../reducer/action/schematic_block_diagram';
 
 
-let define_visual_nodes= (root, data)=>
+let define_visual_nodes = (root, data)=>
 {
+    let start_node = {id:"start", type:9, next: "", child: root, expanded: true, name:">>" };
+    let end_node = {id:"end", type:10, next: "", child: "", name:"<<", expand_state: 0 };
+
     let stack = [];
     let level_stack = [];
     let level = 1;
-    stack.push(data[root]);
+    stack.push(start_node);
     level_stack.push(level);
     let x = 1;
     let y = 1;
 
-    let v_nodes = {};
-
-    let end_node = {id:"0000", name:"end", type:10, expand_state: 0, next:"", child: ""};
-
+    let v_nodes = new Map();
 
     while (stack.length > 0)
     {
+        let v_node = {};
+
         let n = stack.pop();
         let l = level_stack.pop();
         x = l;
-        if(l != level)
-        {
-            y += 1
-        }
-        else
+        if(l == level)
         {
             y += 2;
         }
+        else
+        {
+            y += 1;
+        }
         level = l;
+        v_node['id'] = n['id'];
+        v_node['type'] = n['type'];
+        v_node['name'] = n['name'];
+        v_node['child'] = n['child'];
+        v_node['next'] = n['next'];
+        v_node['x'] = x;
+        v_node['y'] = y;
+
         if (n["next"] == "")
         {
             if(stack.length > 0)
             {
-                n["next"] = stack[stack.length - 1]["id"];
+                v_node['next'] = stack[stack.length - 1]['id'];
             }
         }
         else
         {
-            stack.push(data["n_" + n["next"]]);
+            stack.push(data.get(n['next']));
             level_stack.push(l);
         }
         let expand_state = 0;// none, open, close
         if(n.hasOwnProperty("child") && n["child"] != null && n["child"] != "")
         {
-            if(n["expanded"])
+            if(n['expanded'])
             {
-                stack.push(data["n_" + n["child"]]);
+                stack.push(data.get(n["child"]));
                 level_stack.push(l + 1);
                 expand_state = 1;
             }
@@ -77,26 +87,24 @@ let define_visual_nodes= (root, data)=>
         {
             expand_state = 0;
         }
+        v_node['expand_state'] = expand_state;
+
         if(stack.length == 0)
         {
-            n["next"] = "0000";
+            v_node["next"] = "end";
         }
-
-
-
-        v_nodes["n_" + n["id"]] = {id: n["id"], name: n["name"], type: n["type"], x: x, y: y, expand_state: expand_state, next:n["next"], child: n["child"]};
+        v_nodes.set(v_node['id'], v_node);
     }
     end_node["y"] = y + 1;
     end_node["x"] = 1;
-    v_nodes["n_" + end_node["id"]] = end_node;
+    v_nodes.set(end_node['id'], end_node);
     return v_nodes;
 }
-let get_all_values = (obj)=>
+let get_values = (map)=>
 {
     let values = [];
-    for(let k in obj)
-    {
-        values.push(obj[k]);
+    for (var value of map.values()) {
+        values.push(value);
     }
     return values;
 }
@@ -128,11 +136,12 @@ class generator extends React.Component {
 
         debugger;
 
+        ///let ddd = this.props.schematic_block_diagram;
+
         console.log(this.props);
 
-
-        let nodes = define_visual_nodes("n_1", this.props["nodes"]);
-        let data = get_all_values(nodes);
+        let nodes = define_visual_nodes("1", this.props.schematic_block_diagram.nodes);
+        let data = get_values(nodes);
 
         let circleRadius = 10;
         let squareSize = 20;
@@ -156,12 +165,11 @@ class generator extends React.Component {
             .attr("class","arrowHead");
 
         svg.selectAll(".child_link")
-            .data(data.filter((d)=>{return d["child"] != "" && nodes.hasOwnProperty("n_" + d["child"])} ))
+            .data(data.filter((d)=>{return d["child"] != "" && nodes.has(d["child"])} ))
             .enter()
             .append("path")
             .attr("d", (d)=>{
-                let to = nodes["n_" + d["child"]];
-
+                let to = nodes.get(d["child"]);
                 let result = "M " + (d.x  * 30 + 50) + " " + (d.y * 20 + 50);
                 //result += " L " + (d.x1 - 10) + " " + (d.y1 + 10);
                 //result += " L " + (d.x2 - 12) + " " + (d.y1 + 10);
@@ -178,11 +186,11 @@ class generator extends React.Component {
 
 
         svg.selectAll(".next_link")
-            .data(data.filter((d)=>{return d["next"] != "" && nodes.hasOwnProperty("n_" + d["next"])}))
+            .data(data.filter((d)=>{return d["next"] != "" && nodes.has(d["next"])}))
             .enter()
             .append("path")
             .attr("d", (d)=>{
-                let to = nodes["n_" + d["next"]];
+                let to = nodes.get(d["next"]);
 
                 let result = "M " + (d.x  * 30 + 50) + " " + (d.y * 20 + 50);
                 //result += " L " + (d.x1 - 10) + " " + (d.y1 + 10);
@@ -229,7 +237,7 @@ class generator extends React.Component {
             .append("text")
             .attr("x", (d)=>{return d.x * 30  + 50 + 12;})
             .attr("y", (d)=>{return d.y * 20  + 50;})
-            .text((d)=>{return d.name;})
+            .text((d)=>{return d['name'];})
             .attr("font-size", "7px")
             .attr("font-family", "sans-serif")
             //.attr("text-anchor", "middle")
@@ -251,8 +259,8 @@ class generator extends React.Component {
 
 
 function map_state_to_props (state, own_pros) {
-    let prop = Object.assign({common:state.common}, state.schematic_block_diagram);
-    return prop;
+
+    return state;
 }
 
 function map_dispatch_to_props(dispatch, own_props){
