@@ -114,11 +114,14 @@ class generator extends React.Component {
 
     constructor(props) {
         super(props);
-        this._element = undefined;
     }
 
     render()
     {
+        let nodes = define_visual_nodes("1", this.props.schematic_block_diagram.nodes);
+        let data = get_values(nodes);
+
+
         return(
             <Flexbox
                 flexDirection="column"
@@ -126,25 +129,51 @@ class generator extends React.Component {
                 alignItems="stretch"
                 margin="7px"
             >
-                <svg className="dia_field" ref={(ref) => this._element = ref}></svg>
+                <svg className="dia_field">
+                    <defs>
+                        <marker id="arrow" viewBox="0 -15 30 30" refX="10" refY="0" markerWidth="20" markerHeight="20" orient="auto"><path d="M0,-3 L10,0 L10,0 L0,3" class="arrowHead"></path></marker>
+                    </defs>
+                    <circle id="asd" cx="60" cy="60" r="20" onClick={this.increase({hello: "hello world"})} />
+                </svg>
             </Flexbox>
-
         );
     }
 
-    componentDidMount(){
 
+
+
+    increase(p)
+    {
+        return function (e, p2) {
+            e.persist();
+            console.log('--------------');
+            console.log(p);
+            console.log(p2);
+            console.log(e);
+            console.log(this);
+        }.bind(this) //important to bind function
+    }
+
+    componentDidMount(){
+/*
         debugger;
 
         ///let ddd = this.props.schematic_block_diagram;
 
+        //
+
+        //<path d="M 65 101 L 80 113" stroke="white" strike-width="3" fill="none" class="link" marker-end="url(#arrow)"></path>
+
+        // <text class="node op" x="110" y="186" font-size="9px" font-family="sans-serif" fill="white">op</text>
+
+        const x_offset = 50;
+        const y_offset = 50;
+        const x_step_size = 15;
+        const y_step_size = 17;
+
         console.log(this.props);
 
-        let nodes = define_visual_nodes("1", this.props.schematic_block_diagram.nodes);
-        let data = get_values(nodes);
 
-        let circleRadius = 10;
-        let squareSize = 20;
 
         let svg = d3.select(this._element);
 
@@ -161,7 +190,7 @@ class generator extends React.Component {
                 "orient":"auto"
             })
             .append("path")
-            .attr("d", "M0,-5 L10,0 L10,0 L0,5")
+            .attr("d", "M0,-3 L10,0 L10,0 L0,3")
             .attr("class","arrowHead");
 
         svg.selectAll(".child_link")
@@ -170,12 +199,8 @@ class generator extends React.Component {
             .append("path")
             .attr("d", (d)=>{
                 let to = nodes.get(d["child"]);
-                let result = "M " + (d.x  * 30 + 50) + " " + (d.y * 20 + 50);
-                //result += " L " + (d.x1 - 10) + " " + (d.y1 + 10);
-                //result += " L " + (d.x2 - 12) + " " + (d.y1 + 10);
-                //result += " L " + (d.x2 - 14) + " " + (d.y1 + 8);
-                //result += " L " + (d.x2 - 14) + " " + (d.y2 + 5);
-                result += " L " + ((to.x * 30 + 50) - squareSize/2)  + " " + (to.y  * 20 + 50);
+                let result = "M " + (d.x  * x_step_size + x_offset) + " " + (d.y * y_step_size + y_offset);
+                result += " L " + (to.x * x_step_size + x_offset)  + " " + (to.y  * y_step_size + y_offset - 5);
                 return result;
             })
             .attr("stroke", "white")
@@ -192,12 +217,8 @@ class generator extends React.Component {
             .attr("d", (d)=>{
                 let to = nodes.get(d["next"]);
 
-                let result = "M " + (d.x  * 30 + 50) + " " + (d.y * 20 + 50);
-                //result += " L " + (d.x1 - 10) + " " + (d.y1 + 10);
-                //result += " L " + (d.x2 - 12) + " " + (d.y1 + 10);
-                //result += " L " + (d.x2 - 14) + " " + (d.y1 + 8);
-                //result += " L " + (d.x2 - 14) + " " + (d.y2 + 5);
-                result += " L " + ((to.x * 30 + 50) - squareSize/2)  + " " + (to.y  * 20 + 50);
+                let result = "M " + (d.x  * x_step_size + x_offset) + " " + (d.y * y_step_size + y_offset);
+                result += " L " + (to.x * x_step_size + x_offset)  + " " + (to.y  * y_step_size + y_offset  - 5);
                 return result;
             })
             .attr("stroke", "white")
@@ -206,37 +227,96 @@ class generator extends React.Component {
             .attr("class", "link")
             .attr("marker-end", "url(#arrow)");
 
-        svg.selectAll(".op")
+        //svg.selectAll(".op")
+        //    .data(data)
+        //    .enter()
+        //    .append("circle")
+        //    .attr("class", "op")
+        //    .attr("r", circleRadius)
+        //    .attr("cx", function(d) { return d.x * 30 + 50; })
+        //    .attr("cy", function(d) { return d.y * 20 + 50; })
+        //    .on("click", function(d){
+        //        let el = d3.select(this);
+        //        if(el.attr("class") == "op"){
+        //            el.attr("class", "op_clicked");
+        //        }
+        //        else {
+        //            el.attr("class", "op");
+        //        }
+        //    })
+        //    .on("dblclick", function(){alert("ok")})
+        //    .on("contextmenu", function (d, i) {
+        //        alert("menu");
+        //        d3.event.preventDefault();
+        //
+        //        // react on right-clicking
+        //    });
+
+        svg.selectAll(".node")
             .data(data)
             .enter()
-            .append("circle")
-            .attr("class", "op")
-            .attr("r", circleRadius)
-            .attr("cx", function(d) { return d.x * 30 + 50; })
-            .attr("cy", function(d) { return d.y * 20 + 50; })
-            .on("click", function(d){
-                let el = d3.select(this);
-                if(el.attr("class") == "op"){
-                    el.attr("class", "op_clicked");
-                }
-                else {
-                    el.attr("class", "op");
+            .append("text")
+            .classed('node', true)
+            .classed('op', function(d) { return true; })
+            .attr("x", (d)=>{return d.x * x_step_size  + x_offset;})
+            .attr("y", (d)=>{return d.y * y_step_size  + y_offset;})
+            .text((d)=>
+            {
+                switch(d['type'])
+                {
+                    case 1:
+                    {
+                        return 'if';
+                    }break;
+                    case 2:
+                    {
+                        return 'el';
+                    }
+                    case 3:
+                    {
+                        return 'sw';
+                    }
+                    case 4:
+                    {
+                        return 'op';
+                    }
+                    case 5:
+                    {
+                        return 'del';
+                    }
+                    case 6:
+                    {
+                        return 'p';
+                    }
+                    default:
+                    {
+                        return '';
+                    }
                 }
             })
-            .on("dblclick", function(){alert("ok")})
-            .on("contextmenu", function (d, i) {
-                alert("menu");
-                d3.event.preventDefault();
+            .attr("font-size", "9px")
+            .attr("font-family", "sans-serif")
+            //.attr("text-anchor", "middle")
+            .attr("fill", "white")
+            .on("click", function(d){
+                // вызвать action
 
-                // react on right-clicking
-            });
+                //let el = d3.select(this);
+                //if(el.attr("class") == "op"){
+                //    el.attr("class", "op_clicked");
+                //}
+                //else {
+                //    el.attr("class", "op");
+                //}
+            })
 
         svg.selectAll(".title")
             .data(data)
             .enter()
             .append("text")
-            .attr("x", (d)=>{return d.x * 30  + 50 + 12;})
-            .attr("y", (d)=>{return d.y * 20  + 50;})
+            .attr("class", "title")
+            .attr("x", (d)=>{return d.x * x_step_size  + x_offset + 15;})
+            .attr("y", (d)=>{return d.y * y_step_size  + y_offset;})
             .text((d)=>{return d['name'];})
             .attr("font-size", "7px")
             .attr("font-family", "sans-serif")
@@ -244,7 +324,7 @@ class generator extends React.Component {
             .attr("fill", "white");
 
 
-
+*/
         //this.componentDidUpdate();
     }
 
