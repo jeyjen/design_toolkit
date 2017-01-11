@@ -15,10 +15,10 @@ const App = () => (
         <Navigator/>
     </MuiThemeProvider>
 );
-
 ReactDOM.render(<App/>, document.getElementById("content"));
 
-ns.set_view("dia");
+//ns.set_view("dia");
+ns.set_view("resize");
 
 // tp.start()
 //     .then((r)=>

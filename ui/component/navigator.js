@@ -57,3 +57,10 @@ class navigator extends component {
     }
 }
 export default navigator;
+
+
+/*
+ <Viewport>
+ {view}
+ </Viewport>
+* */
