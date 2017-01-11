@@ -9,8 +9,11 @@ class sect extends React.Component {
     }
 
     render() {
+        let style = assign({}, this.props);
+        delete style.children;
+
         return (
-            <section style={this.props}>
+            <section style={style}>
                 {this.props.children}
             </section>
         );

@@ -1,6 +1,7 @@
 import component from '../engine/component';
 import Viewport from '../control/viewport';
 import Sect from '../control/sect';
+import Flex from '../control/flex';
 import Toolbar from './toolbar';
 import Sidebar from './sidebar';
 import Init from './init';
@@ -24,20 +25,16 @@ class navigator extends component {
     componentWillUnmount() {
         this.off(ns, ns.event.on_view_changed);
     }
-    render_template(view)
+    render_template(View)
     {
         return(
-            <Sect>
+            <Flex flexDirection="column" height="100%">
                 <Sidebar/>
                 <Toolbar/>
-                <Sect
-                flexGrow="1">
-                    {view}
-                </Sect>
-            </Sect>
+                <View style={{backgroundColor:'#7563c6', flexGrow:1, width:'100%'}}/>
+            </Flex>
         )
     }
-
     render() {
 
         let view = null;
@@ -49,7 +46,7 @@ class navigator extends component {
             }break;
             case 'dia':
             {
-                view = this.render_template(<Dia/>);
+                view = this.render_template(Dia);
             }break;
         }
         return (

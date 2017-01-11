@@ -139,9 +139,6 @@ class generator extends React.Component {
         );
     }
 
-
-
-
     increase(p)
     {
         return function (e, p2) {

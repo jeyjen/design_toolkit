@@ -99,7 +99,7 @@ module.exports = {
         path: path.join(__dirname, 'public')
       }),
     new HtmlWebpackPlugin({
-      title: 'TESTosterone',
+      title: 'dt',
       filename: './index.html',
       template:'template.html',
       inject: 'body',

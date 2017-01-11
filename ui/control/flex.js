@@ -9,6 +9,7 @@ class flex extends React.Component {
     }
     render() {
         let style = assign({display:'flex'}, this.props);
+        delete style.children;
         return (
             <section style={style}>
                 {this.props.children}
