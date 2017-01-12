@@ -17,8 +17,7 @@ const App = () => (
 );
 ReactDOM.render(<App/>, document.getElementById("content"));
 
-//ns.set_view("dia");
-ns.set_view("resize");
+ns.set_view("dia");
 
 // tp.start()
 //     .then((r)=>
