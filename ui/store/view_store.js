@@ -4,14 +4,16 @@ let fake_data =
     [
         {id:"0", type:3, next: "", child: "1", name:"root" },
         {id:"1", type:3, next: "", child: "2", name:"контекст order" },
-        {id:"2", type:3, next: "", child: "3", name:"контекст generate" },
+        {id:"2", type:3, next: "10", child: "3", name:"контекст generate" },
         {id:"3", type:1, next: "5", child: "4", name:"атрибуты не загружены" },
         {id:"4", type:4, next: "", child: "", name:"загрузить атрибуты из БД" },
         {id:"5", type:4, next: "6", child: "", name:"копировать шаблон" },
         {id:"6", type:4, next: "7", child: "", name:"установить переданные значения" },
         {id:"7", type:6, next: "", child: "8", name:"заполнить атрибуты заявки" },
         {id:"8", type:4, next: "9", child: "", name:"заполнить параметры продукта" },
-        {id:"9", type:4, next: "", child: "", name:"заполнить параметры клиента" }
+        {id:"9", type:4, next: "", child: "", name:"заполнить параметры клиента" },
+        {id:"10", type:3, next: "11", child: "", name:"контекст order" },
+        {id:"11", type:3, next: "", child: "", name:"контекст template" },
     ]
 
 class view_store extends EventEmitter
@@ -92,11 +94,11 @@ class view_store extends EventEmitter
             v_node['x'] = x;
             v_node['y'] = y;
 
-            if (n["next"] == "")
+            if (n["next"] === "")
             {
                 if(stack.length > 0)// и тип не while
                 {
-                    v_node['next'] = stack[stack.length - 1]['id'];
+                    v_node['next'] = stack[stack.length - 1];
                 }
             }
             else
@@ -142,6 +144,12 @@ class view_store extends EventEmitter
             {
                 let ch = this.v_nodes.get(v.child);
                 this.refs.push({x1:v.x, y1:v.y, x2:ch.x, y2: ch.y});
+            }
+
+            if(v.next.length > 0)
+            {
+                let next = this.v_nodes.get(v.next);
+                this.refs.push({x1:v.x, y1:v.y, x2:next.x, y2: next.y});
             }
         });
     }

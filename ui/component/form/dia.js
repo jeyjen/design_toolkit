@@ -6,7 +6,7 @@ class dia extends component {
         super(props);
         this.state =
         {
-            x_offset: this.props.x_offset === undefined? 30: this.props.x_offset,
+            x_offset: this.props.x_offset === undefined? 25: this.props.x_offset,
             y_offset: this.props.y_offset === undefined? 30: this.props.y_offset
         };
     }
@@ -24,17 +24,53 @@ class dia extends component {
         let color = this.props.node_color === undefined? '#ffffff': this.props.node_color;
 
         let els = [];
+        let lbls = [];
         vs.v_nodes.forEach((v, k, m)=>
         {
             let c = vs.selected_nodes.has(v['id'])? '#000000': color;
-            els.push(<use xlinkHref={'#' + v['type']} transform="scale(1)"  x={this.x(v["x"])} y={this.y(v["y"])} style={{stroke:c, fill:c}} onClick={this.node_click(v)} />);
-
+            els.push(<use xlinkHref={'#' + v['type']} transform="scale(1)"  x={this.x(v['x'])} y={this.y(v['y'])} style={{stroke:c, fill:c}} onClick={this.node_click(v)} />);
+            lbls.push(<text x={this.x(v['x']) + 15} y={this.y(v['y'])} dy="5" style={{fill:c}}>{v['name']}</text>);
         });
 
         let links = vs.refs.map((i)=>
         {
-            let d = "M" + this.x(i.x1) + " " + this.y(i.y1) + " L " + this.x(i.x2) + " " + this.y(i.y2);
-            return <path d={d} stroke={color} strokeWidth={3} fill="none" markerEnd="url(#arrow)"></path>
+            let d = "";
+
+            if(i.x2 > i.x1)// для потомков
+            {
+                d += "M" + (this.x(i.x1) + 8) + " " + (this.y(i.y1) + 8);
+                d += " L " + (this.x(i.x2) - 9) + " " + (this.y(i.y2) - 9);
+            }
+            else if(i.x2 == i.x1) // для узлов на одном уровне
+            {
+                d += "M" + this.x(i.x1) + " " + (this.y(i.y1) + 11);
+                d += " L " + this.x(i.x2) + " " + (this.y(i.y2) - 12);
+            }
+            else if(i.x2 < i.x1 && i.y2 > i.y1 )// для следующих на уровень выше
+            {
+                d += "M" + (this.x(i.x1) - 8) + " " + (this.y(i.y1) + 8);
+                d += " L " + (this.x(i.x2) + 9) + " " + (this.y(i.y2) - 9);
+            }
+            else if(i.x2 < i.x1 && i.y2 < i.y1) // для циклов (возврат к предыдущим на уровень выше)
+            {
+
+            }
+
+
+
+
+            /*
+             let result = "M " + d.s.x + " " + d.s.y;
+             result += " L " + (d.s.x - 13) + " " + (d.s.y + 13);
+             result += " L " + (d.t.x - 20) + " " + (d.s.y + 13);
+             result += " L " + (d.t.x - 20) + " " + (d.t.y);
+             result += " L " + (d.t.x - squareSize/2) + " " + (d.t.y);
+             return result;
+            * */
+
+            console.log(d);
+
+            return <path d={d} stroke={color} strokeWidth={1} fill="none" markerEnd="url(#arrow)"></path>
         })
 
         // отрисовать стрелки
@@ -42,6 +78,9 @@ class dia extends component {
         return (
             <svg style={this.props.style}>
                 <defs>
+                    <marker id="arrow" viewBox=" 0 0 10 10" markerWidth="5" markerHeight="5" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+                        <path d="M0,0 L0,6 L6,3 z" fill="#ffffff" />
+                    </marker>
                     <g id="if" transform="translate(-12,-12)">
                         <path id="if" d="m 12,6 -6,6 6,6 6,-6 z"  width="100px" height="100px"/>
                         <ellipse id="circle" cx="12" cy="12" rx="9" ry="9" style={{fill:'none', strokeWidth:1}}/>
@@ -80,8 +119,9 @@ class dia extends component {
                         <ellipse id="circle" cx="12" cy="12" rx="9" ry="9" style={{fill:'none', strokeWidth:1}}/>
                     </g>
                 </defs>
-                {els}
                 {links}
+                {els}
+                {lbls}
             </svg>
         );
     }
