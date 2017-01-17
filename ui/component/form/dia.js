@@ -19,15 +19,15 @@ class dia extends component {
     {
         this.off(vs, vs.e.on_selected_set_updated);
     }
+    
     render()
     {
-        let color = this.props.node_color === undefined? '#ffffff': this.props.node_color;
-
+        let color = this.props.node_color === undefined? '#0D47A1': this.props.node_color;
         let els = [];
         let lbls = [];
         vs.v_nodes.forEach((v, k, m)=>
         {
-            let c = vs.selected_nodes.has(v['id'])? '#000000': color;
+            let c = vs.selected_nodes.has(v['id'])? '#311B92': color;
             els.push(<use xlinkHref={'#' + v['type']} transform="scale(1)"  x={this.x(v['x'])} y={this.y(v['y'])} style={{stroke:c, fill:c}} onClick={this.node_click(v)} />);
             lbls.push(<text x={this.x(v['x']) + 15} y={this.y(v['y'])} dy="5" style={{fill:c}}>{v['name']}</text>);
         });

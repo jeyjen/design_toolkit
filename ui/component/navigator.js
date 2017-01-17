@@ -11,7 +11,6 @@ import ns from '../store/navigation_store';
 import Dia from './form/dia';
 
 injectTapEventPlugin();
-
 class navigator extends component {
     constructor(props) {
         super(props);
@@ -25,16 +24,6 @@ class navigator extends component {
     componentWillUnmount() {
         this.off(ns, ns.event.on_view_changed);
     }
-    render_template(View)
-    {
-        return(
-            <Flex flexDirection="column" height="100%">
-                <Sidebar/>
-                <Toolbar/>
-                <View style={{backgroundColor:'#7563c6', flexGrow:1, width:'100%'}}/>
-            </Flex>
-        )
-    }
     render() {
 
         let view = null;
@@ -46,18 +35,33 @@ class navigator extends component {
             }break;
             case 'dia':
             {
-                view = this.render_template(Dia);
+                view =
+                    <Viewport>
+                    <Flex flexDirection="column" height="100%">
+                        <Sidebar/>
+                        <Toolbar/>
+                        <Flex
+                            flexDirection="row"
+                            height="100%"
+                        >
+                            <Dia style={{flexGrow:2}}/>
+                            <Sect
+                                flexGrow={2}
+                            >
+                                ads
+                            </Sect>
+                        </Flex>
+
+                    </Flex>
+                    </Viewport>;
             }break;
         }
         return (
-            <Viewport>
-                {view}
-            </Viewport>
+            view
         );
     }
 }
 export default navigator;
-
 
 /*
  <Viewport>
