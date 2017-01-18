@@ -44,9 +44,9 @@ class navigator extends component {
                             flexDirection="row"
                             height="100%"
                         >
-                            <Dia style={{flexGrow:2}}/>
+                            <Dia style={{flexGrow:1}}/>
                             <Sect
-                                flexGrow={2}
+                                flexGrow={1}
                             >
                                 ads
                             </Sect>

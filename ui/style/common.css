@@ -25,12 +25,15 @@ footer { clear: both; }
     font-family: muller; /* Гарнитура шрифта */
     src: url(font/muller_bold.ttf); /* Путь к файлу со шрифтом */
 }
+@font-face {
+    font-family: exo_regular; /* Гарнитура шрифта */
+    src: url(font/exo/exo2_regular.ttf); /* Путь к файлу со шрифтом */
+}
 
 /*
 src: url(font/vipna_gorgialla_cyrillized.ttf);
 */
 
-h1 {
-    font-family: muller, 'Comic Sans MS', cursive;
-    font-size: 150%;
+body {
+    font-family: exo_regular, 'Comic Sans MS', cursive;
 }
