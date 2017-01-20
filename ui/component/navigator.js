@@ -9,6 +9,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import ns from '../store/navigation_store';
 import Dia from './form/dia';
+import Detail from './form/detail';
 
 injectTapEventPlugin();
 class navigator extends component {
@@ -45,11 +46,7 @@ class navigator extends component {
                             height="100%"
                         >
                             <Dia style={{flexGrow:1}}/>
-                            <Sect
-                                flexGrow={1}
-                            >
-                                ads
-                            </Sect>
+                            <Detail style={{width:'300px'}}/>
                         </Flex>
 
                     </Flex>

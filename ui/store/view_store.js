@@ -25,7 +25,7 @@ class view_store extends EventEmitter
         this.e =
         {
             on_visual_struct_changed: 'on_visual_struct_changed',
-            on_selected_set_updated: 'on_selected_set_updated'
+            on_selected_node_changed: 'on_selected_node_changed'
         }
 
         this.root = "0";
@@ -34,7 +34,8 @@ class view_store extends EventEmitter
         this.refs = [];
         this.collapsed_nodes = new Map();
         this.types = new Map();
-        this.selected_nodes = new Set();
+        this.selected_node_1 = null;
+        //this.selected_node_2 = null;
 
         // initialization
         this.types.set(1, "if");
@@ -50,8 +51,6 @@ class view_store extends EventEmitter
         {
             this.nodes.set(i.id, i);
         });
-
-        this.selected_nodes.add('4');
 
         this._define_visual_struct();
         this._define_refs();
@@ -154,23 +153,51 @@ class view_store extends EventEmitter
         });
     }
 
-    some()
+    _get_node_by_id(id)
     {
-        this.is_sidebar_open = false;
-        this.emit(this.event.on_sidebar_state_changed);
+        if(this.nodes.has(id))
+        {
+            return this.nodes.get(id);
+        }
+        return null;
     }
 
-    tap_node(id)
+    select_node(id)
     {
-        if(this.selected_nodes.has(id))
+        this.selected_node_1 = this._get_node_by_id(id);
+        this.emit(this.e.on_selected_node_changed);
+        //if(this.selected_node_1 == null)
+        //{
+        //    this.selected_node_1 = this._get_node_by_id(id);
+        //}
+        //else
+        //{
+        //    if(this.selected_node_2 == null)
+        //    {
+        //        this.selected_node_2 = this._get_node_by_id(id);
+        //    }
+        //    else
+        //    {
+        //        this.selected_node_1 = this._get_node_by_id(id);;
+        //        this.selected_node_2 = null;
+        //    }
+        //}
+    }
+    update_node(values)
+    {
+        if(values.hasOwnProperty('name'))
         {
-            this.selected_nodes.delete(id);
+            this.selected_node_1.name = values.name;
         }
-        else
-        {
-            this.selected_nodes.add(id);
-        }
-        this.emit(this.e.on_selected_set_updated);
+
+        this.emit(this.e.on_selected_node_changed);
+        this._define_visual_struct();
+    }
+    clear_selected_nodes()
+    {
+        this.selected_node_1 = null;
+        //this.selected_node_2 = null;
+        this.emit(this.e.on_selected_node_changed);
     }
 
 }

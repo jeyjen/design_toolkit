@@ -1,18 +1,20 @@
 import component from '../../engine/component';
-import ps from '../../store/example_store';
-import po from '../../operation/remote';
-import co from '../operation/common';
 
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
-import Toggle from 'material-ui/Toggle';
-
+import TextField from 'material-ui/TextField';
 import IconClear from 'material-ui/svg-icons/content/clear';
+import IconDown from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
+import IconUp from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
+import IconLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
+import IconRight from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
 import IconButton from 'material-ui/IconButton';
 
-import Flexbox from '../../control/flex';
+import Sect from '../../control/sect';
+import Flex from '../../control/sect';
+import Paper from 'material-ui/Paper';
 
-class filter extends component {
+import vs from '../../store/view_store';
+
+class detail extends component {
     constructor(props) {
         super(props);
         this.state =
@@ -21,244 +23,144 @@ class filter extends component {
 
     componentDidMount()
     {
-        this.subscribe(ps, ps.event.on_product_type_changed, ()=>
-        {
-            if(ps.state.sel_type != null)
-            {
-                if(cs.state.sel_contour != null)
-                {
-                    po.load_products();
-                }
-                po.load_attributes();
-                po.load_templates();
-            }
-            co.define_attributes(null);
+        this.on(vs, vs.e.on_selected_node_changed);
 
-            this.setState(this.state);
-        });
-        this.subscribe(ps, ps.event.on_filter_changed);
-        this.subscribe(ps, ps.event.on_tariff_changed);
-        this.subscribe(ps, ps.event.on_tariff_plan_changed);
-        this.subscribe(ps, ps.event.on_currency_changed);
-        this.subscribe(ps, ps.event.on_card_changed);
-        this.subscribe(ps, ps.event.on_design_changed);
-        this.subscribe(ps, ps.event.on_param_changed);
-        this.subscribe(ps, ps.event.on_action_changed);
-        this.subscribe(ps, ps.event.on_segment_changed);
-        this.subscribe(ps, ps.event.on_cash_changed);
-        this.subscribe(ps, ps.event.on_is_active_changed);
     }
 
     componentWillUnmount()
     {
-
+        this.off(vs, vs.e.on_selected_node_changed);
     }
 
     render() {
-        let filter = null;
-        let style=
-        {
-            whiteSpace:'nowrap',
-            textOverflow:'ellipsis',
-            overflow:'hidden'
-        }
-        if(ps.state.sel_type == 26 || ps.state.sel_type == 23)
-        {
-            filter = <section
-                flexDirection="column"
-            >
-                <SelectField
-                    value={ps.state.sel_tariff_plan}
-                    floatingLabelText="тарифный план"
-                    floatingLabelFixed={true}
-                    hintText="..."
-                    fullWidth={true}
-                    style={style}
-                    onChange={(e,i,v)=>{ps.set_tariff_plan(v)}}>
-                    <IconButton
-                        onTouchTap={()=>{ps.set_tariff_plan(null)}}
-                        touch={true} >
-                        <IconClear />
-                    </IconButton>
-                    {ps.state.tariff_plans.map((i)=>
-                    {
-                        return <MenuItem key={i} value={i} primaryText={i} />
-                    })}
-                </SelectField>
 
-                <SelectField
-                    value={ps.state.sel_tariff}
-                    disabled={ps.state.sel_tariff_plan == null}
-                    floatingLabelText="тариф"
-                    floatingLabelFixed={true}
-                    style={style}
-                    hintText="..."
-                    fullWidth={true}
-                    onChange={(e,i,v)=>{ps.set_tariff(v)}}>
-                    <IconButton
-                        onTouchTap={()=>{ps.set_tariff(null)}}
-                        touch={true} >
-                        <IconClear />
-                    </IconButton>
-                    {ps.state.tariffs.map((i)=>
-                    {
-                        return <MenuItem key={i} value={i} primaryText={i} />
-                    })}
-                </SelectField>
-                <SelectField
-                    value={ps.state.sel_card}
-                    disabled={ps.state.sel_tariff == null}
-                    floatingLabelText="карта"
-                    floatingLabelFixed={true}
-                    style={style}
-                    hintText="..."
-                    fullWidth={true}
-                    onChange={(e,i,v)=>{ps.set_card(v)}}>
-                    <IconButton
-                        onTouchTap={()=>{ps.set_card(null)}}
-                        touch={true} >
-                        <IconClear />
-                    </IconButton>
-                    {ps.state.cards.map((i)=>
-                    {
-                        return <MenuItem key={i} value={i} primaryText={i} />
-                    })}
-                </SelectField>
-                <SelectField
-                    value={ps.state.sel_design}
-                    disabled={ps.state.sel_card == null}
-                    floatingLabelText="дизайн"
-                    floatingLabelFixed={true}
-                    style={style}
-                    hintText="..."
-                    fullWidth={true}
-                    onChange={(e,i,v)=>{ps.set_design(v)}}>
-                    <IconButton
-                        onTouchTap={()=>{ps.set_design(null)}}
-                        touch={true} >
-                        <IconClear />
-                    </IconButton>
-                    {ps.state.designs.map((i)=>
-                    {
-                        return <MenuItem key={i} value={i} primaryText={i} />
-                    })}
-                </SelectField>
-                <SelectField
-                    value={ps.state.sel_currency}
-                    disabled={ps.state.sel_card == null}
-                    floatingLabelText="валюта"
-                    floatingLabelFixed={true}
-                    style={style}
-                    hintText="..."
-                    fullWidth={true}
-                    onChange={(e,i,v)=>{ps.set_currency(v)}}>
-                    <IconButton
-                        onTouchTap={()=>{ps.set_currency(null)}}
-                        touch={true} >
-                        <IconClear />
-                    </IconButton>
-                    {ps.state.currencies.map((i)=>
-                    {
-                        return <MenuItem key={i} value={i} primaryText={i} />
-                    })}
-                </SelectField>
-                <SelectField
-                    value={ps.state.sel_action}
-                    disabled={ps.state.sel_card == null}
-                    floatingLabelText="акция"
-                    floatingLabelFixed={true}
-                    style={style}
-                    hintText="..."
-                    fullWidth={true}
-                    onChange={(e,i,v)=>{ps.set_action(v)}}>
-                    <IconButton
-                        onTouchTap={()=>{ps.set_action(null)}}
-                        touch={true} >
-                        <IconClear />
-                    </IconButton>
-                    {ps.state.actions.map((i)=>
-                    {
-                        return <MenuItem key={i} value={i} primaryText={i} />
-                    })}
-                </SelectField>
-                <SelectField
-                    value={ps.state.sel_segment}
-                    disabled={ps.state.sel_card == null}
-                    floatingLabelText="сегмент"
-                    floatingLabelFixed={true}
-                    style={style}
-                    hintText="..."
-                    fullWidth={true}
-                    onChange={(e,i,v)=>{ps.set_segment(v)}}>
-                    <IconButton
-                        onTouchTap={()=>{ps.set_segment(null)}}
-                        touch={true} >
-                        <IconClear />
-                    </IconButton>
-                    {ps.state.segments.map((i)=>
-                    {
-                        return <MenuItem key={i} value={i} primaryText={i} />
-                    })}
-                </SelectField>
-                <SelectField
-                    value={ps.state.sel_design}
-                    disabled={ps.state.sel_card == null}
-                    floatingLabelText="параметр"
-                    floatingLabelFixed={true}
-                    style={style}
-                    hintText="..."
-                    fullWidth={true}
-                    onChange={(e,i,v)=>{ps.set_param(v)}}>
-                    <IconButton
-                        onTouchTap={()=>{ps.set_param(null)}}
-                        touch={true} >
-                        <IconClear />
-                    </IconButton>
-                    {ps.state.params.map((i)=>
-                    {
-                        return <MenuItem key={i} value={i} primaryText={i} />
-                    })}
-                </SelectField>
+        let name = vs.selected_node_1 == null? '': vs.selected_node_1.name;
 
-            </section>;
-        }
         return (
-            <Flexbox
-                flexDirection="column"
-                justifyContent="center"
-                alignItems="stretch"
-                margin="7px"
-            >
-                <SelectField
-                    value={ps.state.sel_type}
-                    floatingLabelText="тип"
-                    floatingLabelFixed={true}
-                    style={style}
-                    hintText="..."
-                    fullWidth={true}
-                    //disabled={state.sel_contour == null}
-                    onChange={(e, i, v)=>{ps.set_type(v)}}>
-                    {ps.state.product_types.map((i)=>
-                    {
-                        return <MenuItem key={i.id} value={i.id} primaryText={i.name} />
-                    })}
-                </SelectField>
-                <Toggle
-                    label="активные"
-                    labelPosition="right"
-                    toggled={ps.state.is_active}
-                    onToggle={(e,v)=>{ps.set_is_active(v)}}
-                />
-                {filter}
-            </Flexbox>
+            <section style={this.props.style}>
+                <Paper style={{height:'99%', width:'99%'}} zDepth={2} >
+                    <section>
+                        <IconButton
+                            onTouchTap={()=>{}}
+                            touch={true} >
+                            <IconRight />
+                        </IconButton>
+                        <IconButton
+                            onTouchTap={()=>{}}
+                            touch={true} >
+                            <IconDown />
+                        </IconButton>
+                        <IconButton
+                            onTouchTap={()=>{}}
+                            touch={true} >
+                            <IconClear />
+                        </IconButton>
+                    </section>
+                    <section>
+                        <IconButton
+                            onTouchTap={()=>{}}
+                            touch={true} >
+                            <svg width="24px" height="24px">
+                                <path id="if" d="m 12,6 -6,6 6,6 6,-6 z"/>
+                                <ellipse id="circle" cx="12" cy="12" rx="9" ry="9" style={{fillOpacity:".01", stroke:'#000000', strokeWidth:2}}/>
+                            </svg>
+                        </IconButton>
+                        <IconButton
+                            onTouchTap={()=>{}}
+                            touch={true} >
+                            <svg width="24px" height="24px">
+                                <path id="else" d="m 6,10 v 4 h 12 v -4 z" />
+                                <ellipse id="circle" cx="12" cy="12" rx="9" ry="9" style={{fillOpacity:".01", stroke:'#000000', strokeWidth:2}}/>
+                            </svg>
+                        </IconButton>
+                        <IconButton
+                            onTouchTap={()=>{}}
+                            touch={true} >
+                            <svg width="24px" height="24px">
+                                <path id="big" d="m 10,10 v 4 h 8 v -4 z"/>
+                                <path id="small" d="m 6,10 v 4 h 2 v -4 z" />
+                                <ellipse id="sel" cx="12" cy="12" rx="9" ry="9" style={{fillOpacity:".01", stroke:'#000000', strokeWidth:2}}/>
+                            </svg>
+                        </IconButton>
+                        <IconButton
+                            onTouchTap={()=>{}}
+                            touch={true} >
+                            <svg width="24px" height="24px">
+                                <circle r="6" cx="12" cy="12"/>
+                                <ellipse id="op" cx="12" cy="12" rx="9" ry="9" style={{fillOpacity:".01", stroke:'#000000', strokeWidth:2}}/>
+                            </svg>
+                        </IconButton>
+                        <IconButton
+                            onTouchTap={()=>{}}
+                            touch={true} >
+                            <svg width="24px" height="24px">
+                                <path d="m 12,7 5,9 H 15 L 12,10 9,16 H 7 Z"/>
+                                <ellipse id="and" cx="12" cy="12" rx="9" ry="9" style={{fillOpacity:".01", stroke:'#000000', strokeWidth:2}}/>
+                            </svg>
+                        </IconButton>
+                        <IconButton
+                            onTouchTap={()=>{}}
+                            touch={true} >
+                            <svg width="24px" height="24px">
+                                <path d="M 12,17 17,8 H 15 L 12,14 9,8 H 7 Z"/>
+                                <ellipse id="or" cx="12" cy="12" rx="9" ry="9" style={{fillOpacity:".01", stroke:'#000000', strokeWidth:2}}/>
+                            </svg>
+                        </IconButton>
+                    </section>
+                    <section>
+
+                        <IconButton
+                            onTouchTap={()=>{}}
+                            touch={true} >
+                            <svg width="24px" height="24px">
+                                <path id="mirror" d="m 18,12 -4,4 V 8 Z"/>
+                                <path id="line" d="M 14,10 H 6 v 4 h 8 z"/>
+                                <ellipse id="call" cx="12" cy="12" rx="9" ry="9" style={{fillOpacity:".01", stroke:'#000000', strokeWidth:2}}/>
+                            </svg>
+                        </IconButton>
+                        <IconButton
+                            onTouchTap={()=>{}}
+                            touch={true} >
+                            <svg width="24px" height="24px">
+                                <path id="pie" d="M 15.828931,8.2743906 C 14.859541,7.3050025 13.529131,6.7033135 12.051653,6.7033135 9.0966975,6.7033135 6.71,9.096698 6.71,12.051653 6.71,15.006617 9.0966975,17.4 12.051653,17.4 c 2.493663,0 4.572841,-1.704788 5.167846,-4.011262 h -1.390568 c -0.548206,1.557714 -2.03237,2.674182 -3.777278,2.674182 -2.2128726,0 -4.0112533,-1.798381 -4.0112533,-4.011267 0,-2.212875 1.7983807,-4.0112533 4.0112533,-4.0112533 1.109791,0 2.099229,0.4612943 2.82126,1.1900069 L 12.720191,11.383109 H 17.4 V 6.7033135 Z"/>
+                                <ellipse id="while" cx="12" cy="12" rx="9" ry="9" style={{fillOpacity:".01", stroke:'#000000', strokeWidth:2}}/>
+                            </svg>
+                        </IconButton>
+                    </section>
+                    <section style={{padding:13}}>
+                        <TextField
+                            hintText="..."
+                            floatingLabelText="название"
+                            floatingLabelFixed={true}
+                            fullWidth={true}
+                            value={name}
+                            onChange={(e, v)=>{vs.update_node({name:v})}}
+                        />
+                        <TextField
+                            hintText="..."
+                            floatingLabelText="описание"
+                            floatingLabelFixed={true}
+                            multiLine={true}
+                            rows={3}
+                            value={'asd'}
+                        />
+                    </section>
+                </Paper>
+            </section>
         );
     }
 
 }
 
-export default filter;
+export default detail;
 
 /*
+
+ <g id="proc" transform="translate(-12,-12)">
+
+ </g>
+
+
 
 * */
 
