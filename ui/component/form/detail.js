@@ -34,14 +34,15 @@ class detail extends component {
 
     render() {
 
-        let name = vs.selected_node_1 == null? '': vs.selected_node_1.name;
+        let node = vs.get_node_by_id(vs.selected_node_id_1);
+        let name = node == null? "" : node.name;
 
         return (
             <section style={this.props.style}>
                 <Paper style={{height:'99%', width:'99%'}} zDepth={2} >
                     <section>
                         <IconButton
-                            onTouchTap={()=>{}}
+                            onTouchTap={()=>{vs.add_child()}}
                             touch={true} >
                             <IconRight />
                         </IconButton>
@@ -142,7 +143,6 @@ class detail extends component {
                             floatingLabelFixed={true}
                             multiLine={true}
                             rows={3}
-                            value={'asd'}
                         />
                     </section>
                 </Paper>

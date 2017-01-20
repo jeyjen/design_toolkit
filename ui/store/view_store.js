@@ -1,4 +1,5 @@
 import EventEmitter from 'event-emitter-es6';
+import uuid from 'uuid';
 
 let fake_data =
     [
@@ -34,7 +35,7 @@ class view_store extends EventEmitter
         this.refs = [];
         this.collapsed_nodes = new Map();
         this.types = new Map();
-        this.selected_node_1 = null;
+        this.selected_node_id_1 = null;
         //this.selected_node_2 = null;
 
         // initialization
@@ -53,7 +54,6 @@ class view_store extends EventEmitter
         });
 
         this._define_visual_struct();
-        this._define_refs();
     }
 
     _define_visual_struct()
@@ -127,10 +127,10 @@ class view_store extends EventEmitter
                 expand_state = 0;
             }
             v_node['expand_state'] = expand_state;
-
             this.v_nodes.set(v_node['id'], v_node);
         }
 
+        this._define_refs();
         this.emit(this.e.on_visual_struct_changed);
     }
     _define_refs()
@@ -153,7 +153,7 @@ class view_store extends EventEmitter
         });
     }
 
-    _get_node_by_id(id)
+    get_node_by_id(id)
     {
         if(this.nodes.has(id))
         {
@@ -164,42 +164,27 @@ class view_store extends EventEmitter
 
     select_node(id)
     {
-        this.selected_node_1 = this._get_node_by_id(id);
+        this.selected_node_id_1 = id;
         this.emit(this.e.on_selected_node_changed);
-        //if(this.selected_node_1 == null)
-        //{
-        //    this.selected_node_1 = this._get_node_by_id(id);
-        //}
-        //else
-        //{
-        //    if(this.selected_node_2 == null)
-        //    {
-        //        this.selected_node_2 = this._get_node_by_id(id);
-        //    }
-        //    else
-        //    {
-        //        this.selected_node_1 = this._get_node_by_id(id);;
-        //        this.selected_node_2 = null;
-        //    }
-        //}
     }
     update_node(values)
     {
         if(values.hasOwnProperty('name'))
         {
-            this.selected_node_1.name = values.name;
+            this.v_nodes.get(this.selected_node_id_1).name = values.name;
+            this.nodes.get(this.selected_node_id_1).name = values.name;
         }
-
         this.emit(this.e.on_selected_node_changed);
-        this._define_visual_struct();
     }
-    clear_selected_nodes()
+
+    add_child()
     {
-        this.selected_node_1 = null;
-        //this.selected_node_2 = null;
-        this.emit(this.e.on_selected_node_changed);
+        let id = uuid.v1();
+        this.nodes.set(id, {id:id, type:0, next: "", child: "", name:"" });
+        this.get_node_by_id(this.selected_node_id_1).child = id;
+        this.selected_node_id_1 = id;
+        this._define_visual_struct();
+        this.select_node(id);
     }
-
 }
 export default new view_store();
- 

@@ -14,13 +14,13 @@ class dia extends component {
     componentDidMount()
     {
         this.on(vs, vs.e.on_selected_node_changed);
-
+        this.on(vs, vs.e.on_visual_struct_changed);
     }
     componentWillUnmount()
     {
         this.off(vs, vs.e.on_selected_node_changed);
+        this.off(vs, vs.e.on_visual_struct_changed);
     }
-    
     render()
     {
         let color = this.props.node_color === undefined? '#546E7A': this.props.node_color;
@@ -30,13 +30,13 @@ class dia extends component {
         {
 
             let c = color;
-            if(vs.selected_node_1 != null && vs.selected_node_1.id == v['id'])
+            if(vs.selected_node_id_1 == v.id)
             {
                 c = '#FB8C00';
             }
 
-            els.push(<use xlinkHref={'#' + v['type']} transform="scale(1)"  x={this.x(v['x'])} y={this.y(v['y'])} style={{stroke:c, fill:c}} onClick={this.node_click(v['id'])} />);
-            lbls.push(<text x={this.x(v['x']) + 15} y={this.y(v['y'])} dy="5" style={{fill:c}}>{v['name']}</text>);
+            els.push(<use xlinkHref={'#' + v.type} transform="scale(1)"  x={this.x(v.x)} y={this.y(v.y)} style={{stroke:c, fill:c}} onClick={this.node_click(v.id)} />);
+            lbls.push(<text x={this.x(v.x) + 15} y={this.y(v.y)} dy="5" style={{fill:c}}>{v.name}</text>);
         });
 
         let links = vs.refs.map((i)=>
@@ -62,24 +62,11 @@ class dia extends component {
             {
 
             }
-
-            /*
-             let result = "M " + d.s.x + " " + d.s.y;
-             result += " L " + (d.s.x - 13) + " " + (d.s.y + 13);
-             result += " L " + (d.t.x - 20) + " " + (d.s.y + 13);
-             result += " L " + (d.t.x - 20) + " " + (d.t.y);
-             result += " L " + (d.t.x - squareSize/2) + " " + (d.t.y);
-             return result;
-            * */
-
-
             return <path d={d} stroke={'#CFD8DC'} strokeWidth={1} fill="none" markerEnd="url(#arrow)"></path>
         })
 
-        // отрисовать стрелки
-
         return (
-            <svg style={this.props.style} onClick={()=>{ vs.clear_selected_nodes();}}>
+            <svg style={this.props.style} onClick={()=>{ vs.select_node(null);}}>
                 <defs>
                     <marker id="arrow" viewBox=" 0 0 10 10" markerWidth="5" markerHeight="5" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
                         <path d="M0,0 L0,6 L6,3 z" fill="#ffffff" />
