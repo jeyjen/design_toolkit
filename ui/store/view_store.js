@@ -3,18 +3,18 @@ import uuid from 'uuid';
 
 let fake_data =
     [
-        {id:"0", type:3, next: "", child: "1", name:"root" },
-        {id:"1", type:3, next: "", child: "2", name:"контекст order" },
-        {id:"2", type:3, next: "10", child: "3", name:"контекст generate" },
-        {id:"3", type:1, next: "5", child: "4", name:"атрибуты не загружены" },
-        {id:"4", type:4, next: "", child: "", name:"загрузить атрибуты из БД" },
-        {id:"5", type:4, next: "6", child: "", name:"копировать шаблон" },
-        {id:"6", type:4, next: "7", child: "", name:"установить переданные значения" },
-        {id:"7", type:6, next: "", child: "8", name:"заполнить атрибуты заявки" },
-        {id:"8", type:4, next: "9", child: "", name:"заполнить параметры продукта" },
-        {id:"9", type:4, next: "", child: "", name:"заполнить параметры клиента" },
-        {id:"10", type:3, next: "11", child: "", name:"контекст order" },
-        {id:"11", type:3, next: "", child: "", name:"контекст template" },
+        {id:"0", type:3, next: "", children: ["1"], name:"root", description:"описание 1" },
+        {id:"1", type:3, next: "", children: ["2"], name:"контекст order", description:"описание 2" },
+        {id:"2", type:3, next: "10", children: ["3"], name:"контекст generate", description:"описание 3" },//
+        {id:"3", type:1, next: "5", children: ["4"], name:"атрибуты не загружены", description:"описание 4" },
+        {id:"4", type:4, next: "", children: [], name:"загрузить атрибуты из БД", description:"описание 5" },
+        {id:"5", type:4, next: "6", children: [], name:"копировать шаблон", description:"описание 6" },
+        {id:"6", type:4, next: "7", children: [], name:"установить переданные значения", description:"описание 7" },
+        {id:"7", type:6, next: "", children: ["8"], name:"заполнить атрибуты заявки", description:"описание 8" },
+        {id:"8", type:4, next: "9", children: [], name:"заполнить параметры продукта", description:"описание 9" },
+        {id:"9", type:4, next: "", children: [], name:"заполнить параметры клиента", description:"описание 10" },
+        {id:"10", type:3, next: "11", children: [], name:"контекст order", description:"описание 11" },
+        {id:"11", type:3, next: "", children: [], name:"контекст template", description:"описание 12" }
     ]
 
 class view_store extends EventEmitter
@@ -39,6 +39,7 @@ class view_store extends EventEmitter
         //this.selected_node_2 = null;
 
         // initialization
+        this.types.set(0, "none");
         this.types.set(1, "if");
         this.types.set(2, "else");
         this.types.set(3, "sel");
@@ -71,42 +72,52 @@ class view_store extends EventEmitter
 
         while (stack.length > 0)
         {
+            debugger;
             let v_node = {};
-
             let n = this.nodes.get(stack.pop()); // получаем ноду по id
             let l = level_stack.pop();
             x = l;
             if(l == level)
             {
-                y += 2;
+                if(n.children.length > 0)
+                {
+                    y += 2;
+                }
+                else
+                {
+                    y += 1;
+                }
+                // если есть нет потомка то +1
             }
             else
             {
                 y += 1;
             }
             level = l;
-            v_node['id'] = n['id'];
-            v_node['type'] = this.types.get(n['type']);
-            v_node['name'] = n['name'];
-            v_node['child'] = n['child'];
-            v_node['next'] = n['next'];
-            v_node['x'] = x;
-            v_node['y'] = y;
+            v_node.id = n.id;
+            v_node.type = this.types.get(n.type);
+            v_node.name = n.name;
+            v_node.children = n.children;
+            v_node.next = n.next;
+            v_node.x = x;
+            v_node.y = y;
 
-            if (n["next"] === "")
+            if (n.next === "")
             {
                 if(stack.length > 0)// и тип не while
                 {
-                    v_node['next'] = stack[stack.length - 1];
+                    v_node.next = stack[stack.length - 1];
                 }
             }
             else
             {
-                stack.push(n['next']);
+                stack.push(n.next);
                 level_stack.push(l);
             }
+
+
             let expand_state = 0;// none, open, close
-            if(n.hasOwnProperty("child") && n["child"] != null && n["child"] != "")
+            if(n.children.length > 0)
             {
                 if(this.collapsed_nodes.has(n['id']))
                 {
@@ -116,8 +127,11 @@ class view_store extends EventEmitter
                 else
                 {
                     // отображается открытым со значком -
-                    stack.push(n["child"]);
-                    level_stack.push(l + 1);
+                    for(let i = 0; i < n.children.length; i++)
+                    {
+                        stack.push(n.children[i]);
+                        level_stack.push(l + 1);
+                    }
                     expand_state = 1;
                 }
             }
@@ -126,8 +140,8 @@ class view_store extends EventEmitter
                 // отображается без значка раскрытия
                 expand_state = 0;
             }
-            v_node['expand_state'] = expand_state;
-            this.v_nodes.set(v_node['id'], v_node);
+            v_node.expand_state = expand_state;
+            this.v_nodes.set(v_node.id, v_node);
         }
 
         this._define_refs();
@@ -139,10 +153,13 @@ class view_store extends EventEmitter
 
         this.v_nodes.forEach((v, k, m)=>
         {
-            if(v.child.length > 0)
+            if(v.children.length > 0)
             {
-                let ch = this.v_nodes.get(v.child);
-                this.refs.push({x1:v.x, y1:v.y, x2:ch.x, y2: ch.y});
+                v.children.forEach((i)=>
+                {
+                    let ch = this.v_nodes.get(i);
+                    this.refs.push({x1:v.x, y1:v.y, x2:ch.x, y2: ch.y});
+                });
             }
 
             if(v.next.length > 0)
@@ -180,11 +197,30 @@ class view_store extends EventEmitter
     add_child()
     {
         let id = uuid.v1();
-        this.nodes.set(id, {id:id, type:0, next: "", child: "", name:"" });
-        this.get_node_by_id(this.selected_node_id_1).child = id;
+        let sel_node = this.get_node_by_id(this.selected_node_id_1);
+        this.nodes.set(id, {id:id, type:0, next: "", child: sel_node.child, name:"" });
+        sel_node.child = id;
         this.selected_node_id_1 = id;
         this._define_visual_struct();
         this.select_node(id);
+    }
+    add_next()
+    {
+        let id = uuid.v1();
+        let sel_node = this.get_node_by_id(this.selected_node_id_1);
+        this.nodes.set(id, {id:id, type:0, next: "", child: "", name:sel_node.next });
+        sel_node.next = id;
+        this.selected_node_id_1 = id;
+        this._define_visual_struct();
+        this.select_node(id);
+    }
+    set_type(type)
+    {
+        // по выбранному id получить узел
+        // если тип не равен условному
+        // добавить один дочерний элемент
+        // если узла параллельности, то добавлять два узла с ссцлко отдельно на каждого
+        let node = this.get_node_by_id(this.selected_node_id_1);
     }
 }
 export default new view_store();

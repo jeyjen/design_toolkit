@@ -108,6 +108,9 @@ class dia extends component {
                     <g id="proc" transform="translate(-12,-12)">
                         <ellipse id="circle" cx="12" cy="12" rx="9" ry="9" style={{fillOpacity:".01", strokeWidth:1}}/>
                     </g>
+                    <g id="none" transform="translate(-12,-12)">
+                        <ellipse id="circle" cx="12" cy="12" rx="9" ry="9" style={{fillOpacity:".01", strokeWidth:2}}/>
+                    </g>
                 </defs>
                 {links}
                 {els}

@@ -47,7 +47,7 @@ class detail extends component {
                             <IconRight />
                         </IconButton>
                         <IconButton
-                            onTouchTap={()=>{}}
+                            onTouchTap={()=>{vs.add_next()}}
                             touch={true} >
                             <IconDown />
                         </IconButton>
@@ -59,7 +59,7 @@ class detail extends component {
                     </section>
                     <section>
                         <IconButton
-                            onTouchTap={()=>{}}
+                            onTouchTap={()=>{vs.set_type("if")}}
                             touch={true} >
                             <svg width="24px" height="24px">
                                 <path id="if" d="m 12,6 -6,6 6,6 6,-6 z"/>
