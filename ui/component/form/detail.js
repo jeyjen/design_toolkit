@@ -52,14 +52,14 @@ class detail extends component {
                             <IconDown />
                         </IconButton>
                         <IconButton
-                            onTouchTap={()=>{}}
+                            onTouchTap={()=>{vs.delete_node()}}
                             touch={true} >
                             <IconClear />
                         </IconButton>
                     </section>
                     <section>
                         <IconButton
-                            onTouchTap={()=>{vs.set_type("if")}}
+                            onTouchTap={()=>{vs.update_node({type:vs.c.type.IF})}}
                             touch={true} >
                             <svg width="24px" height="24px">
                                 <path id="if" d="m 12,6 -6,6 6,6 6,-6 z"/>
@@ -67,7 +67,7 @@ class detail extends component {
                             </svg>
                         </IconButton>
                         <IconButton
-                            onTouchTap={()=>{}}
+                            onTouchTap={()=>{vs.update_node({type:vs.c.type.ELSE})}}
                             touch={true} >
                             <svg width="24px" height="24px">
                                 <path id="else" d="m 6,10 v 4 h 12 v -4 z" />
@@ -75,7 +75,7 @@ class detail extends component {
                             </svg>
                         </IconButton>
                         <IconButton
-                            onTouchTap={()=>{}}
+                            onTouchTap={()=>{vs.update_node({type:vs.c.type.SEL})}}
                             touch={true} >
                             <svg width="24px" height="24px">
                                 <path id="big" d="m 10,10 v 4 h 8 v -4 z"/>
@@ -84,7 +84,7 @@ class detail extends component {
                             </svg>
                         </IconButton>
                         <IconButton
-                            onTouchTap={()=>{}}
+                            onTouchTap={()=>{vs.update_node({type:vs.c.type.OP})}}
                             touch={true} >
                             <svg width="24px" height="24px">
                                 <circle r="6" cx="12" cy="12"/>
@@ -92,7 +92,7 @@ class detail extends component {
                             </svg>
                         </IconButton>
                         <IconButton
-                            onTouchTap={()=>{}}
+                            onTouchTap={()=>{vs.update_node({type:vs.c.type.AND})}}
                             touch={true} >
                             <svg width="24px" height="24px">
                                 <path d="m 12,7 5,9 H 15 L 12,10 9,16 H 7 Z"/>
@@ -100,7 +100,7 @@ class detail extends component {
                             </svg>
                         </IconButton>
                         <IconButton
-                            onTouchTap={()=>{}}
+                            onTouchTap={()=>{vs.update_node({type:vs.c.type.OR})}}
                             touch={true} >
                             <svg width="24px" height="24px">
                                 <path d="M 12,17 17,8 H 15 L 12,14 9,8 H 7 Z"/>
@@ -109,9 +109,8 @@ class detail extends component {
                         </IconButton>
                     </section>
                     <section>
-
                         <IconButton
-                            onTouchTap={()=>{}}
+                            onTouchTap={()=>{vs.update_node({type:vs.c.type.CALL})}}
                             touch={true} >
                             <svg width="24px" height="24px">
                                 <path id="mirror" d="m 18,12 -4,4 V 8 Z"/>
@@ -120,7 +119,7 @@ class detail extends component {
                             </svg>
                         </IconButton>
                         <IconButton
-                            onTouchTap={()=>{}}
+                            onTouchTap={()=>{vs.update_node({type:vs.c.type.WHILE})}}
                             touch={true} >
                             <svg width="24px" height="24px">
                                 <path id="pie" d="M 15.828931,8.2743906 C 14.859541,7.3050025 13.529131,6.7033135 12.051653,6.7033135 9.0966975,6.7033135 6.71,9.096698 6.71,12.051653 6.71,15.006617 9.0966975,17.4 12.051653,17.4 c 2.493663,0 4.572841,-1.704788 5.167846,-4.011262 h -1.390568 c -0.548206,1.557714 -2.03237,2.674182 -3.777278,2.674182 -2.2128726,0 -4.0112533,-1.798381 -4.0112533,-4.011267 0,-2.212875 1.7983807,-4.0112533 4.0112533,-4.0112533 1.109791,0 2.099229,0.4612943 2.82126,1.1900069 L 12.720191,11.383109 H 17.4 V 6.7033135 Z"/>

@@ -29,8 +29,25 @@ class view_store extends EventEmitter
             on_selected_node_changed: 'on_selected_node_changed'
         }
 
+        this.c =
+        {
+            type:
+            {
+                NONE: 0,
+                IF: 1,
+                ELSE: 2,
+                SEL: 3,
+                OP:4,
+                CALL: 5,
+                WHILE:6,
+                AND:7,
+                OR:8
+            }
+        };
+
         this.root = "0";
         this.nodes = new Map();
+        this.parent = new Map();
         this.v_nodes = new Map();
         this.refs = [];
         this.collapsed_nodes = new Map();
@@ -48,7 +65,7 @@ class view_store extends EventEmitter
         this.types.set(6, "while");
         this.types.set(7, "and");
         this.types.set(8, "or");
-        this.types.set(9, "proc");
+        this.types.set(8, "proc");
         fake_data.forEach((i)=>
         {
             this.nodes.set(i.id, i);
@@ -59,11 +76,11 @@ class view_store extends EventEmitter
 
     _define_visual_struct()
     {
-        this.v_nodes.length = 0;
+        this.v_nodes.clear();
+        this.parent.clear();
 
         let stack = [];
         let level_stack = [];
-        let level = 0;
 
         let x = 1;
         let y = 0;
@@ -72,28 +89,11 @@ class view_store extends EventEmitter
 
         while (stack.length > 0)
         {
-            debugger;
             let v_node = {};
             let n = this.nodes.get(stack.pop()); // получаем ноду по id
-            let l = level_stack.pop();
-            x = l;
-            if(l == level)
-            {
-                if(n.children.length > 0)
-                {
-                    y += 2;
-                }
-                else
-                {
-                    y += 1;
-                }
-                // если есть нет потомка то +1
-            }
-            else
-            {
-                y += 1;
-            }
-            level = l;
+            let x = level_stack.pop();
+            y += 1;
+            //level = x;
             v_node.id = n.id;
             v_node.type = this.types.get(n.type);
             v_node.name = n.name;
@@ -111,8 +111,10 @@ class view_store extends EventEmitter
             }
             else
             {
+                this.parent.set(n.next, n.id); // сохранение ссылки на предка
+
                 stack.push(n.next);
-                level_stack.push(l);
+                level_stack.push(x);
             }
 
 
@@ -129,8 +131,10 @@ class view_store extends EventEmitter
                     // отображается открытым со значком -
                     for(let i = 0; i < n.children.length; i++)
                     {
+                        this.parent.set(n.children[i], n.id); // сохранение ссылки на предка
+
                         stack.push(n.children[i]);
-                        level_stack.push(l + 1);
+                        level_stack.push(x + 1);
                     }
                     expand_state = 1;
                 }
@@ -191,36 +195,147 @@ class view_store extends EventEmitter
             this.v_nodes.get(this.selected_node_id_1).name = values.name;
             this.nodes.get(this.selected_node_id_1).name = values.name;
         }
+        if(values.hasOwnProperty('type'))
+        {
+            /*
+
+                // если тип операция
+                    // удалить всех потомков
+                // иначе
+                    // если тип процесс
+                        // добавить потомка
+                        // потомку добавить один следующий элемент
+                    // если тип "И" или "ИЛИ"
+                        // добавить недостоющее количество потомков до 2-х
+                    // иначе
+                        // добавить недостоющее количество потомков до 1-го
+                // установить тип узла
+
+            */
+
+            let type = values.type;
+            let node = this.get_node_by_id(this.selected_node_id_1);
+            node.type = type;
+            if(type === this.c.type.OP)
+            {
+                node.children.length = 0;
+            }
+            else if(type === this.c.type.AND || type === this.c.type.OR)
+            {
+                while(node.children.length < 2) // удаление излишков
+                {
+                    // добавлять потомков
+                    this._add_child_to(node.id);
+                }
+            }
+            else
+            {
+                while(node.children.length > 1) // удалить излишки
+                {
+                    node.children.pop();
+                }
+                if(node.children.length == 0)
+                {
+                    this._add_child_to(node.id);
+                }
+            }
+            this._define_visual_struct();
+        }
         this.emit(this.e.on_selected_node_changed);
     }
 
     add_child()
     {
-        let id = uuid.v1();
-        let sel_node = this.get_node_by_id(this.selected_node_id_1);
-        this.nodes.set(id, {id:id, type:0, next: "", child: sel_node.child, name:"" });
-        sel_node.child = id;
-        this.selected_node_id_1 = id;
+        let new_id = this._add_child_to(this.selected_node_id_1);
         this._define_visual_struct();
-        this.select_node(id);
+        this.select_node(new_id);
     }
+    _add_child_to(node_id)
+    {
+        /*
+
+         // получить объект выбранного узла
+         // если узел уже имеет потомков
+         // новому элементу добавить ссылку следующего узла на первого потомка выбранного узла
+         // выбранному узлу добавить первым элемент в список дочерних
+         // установить новый узел как выбранный
+
+         */
+
+        let id = uuid.v1();
+        let sel_node = this.get_node_by_id(node_id);
+        let next = "";
+        if(sel_node.children.length == 0 || (sel_node.type === this.c.type.AND || sel_node.type === this.c.type.OR))
+        {
+            sel_node.children.push(id);
+        }
+        else
+        {
+            next = sel_node.children[0];
+            sel_node.children[0] = id;
+        }
+
+        this.nodes.set(id, {id: id, type:0, next: next, children: [], name:"" });
+        return id;
+    }
+
     add_next()
     {
-        let id = uuid.v1();
-        let sel_node = this.get_node_by_id(this.selected_node_id_1);
-        this.nodes.set(id, {id:id, type:0, next: "", child: "", name:sel_node.next });
-        sel_node.next = id;
-        this.selected_node_id_1 = id;
+        let new_id = this._add_next_to(this.selected_node_id_1);
         this._define_visual_struct();
-        this.select_node(id);
+        this.select_node(new_id);
     }
-    set_type(type)
+    _add_next_to(node_id)
     {
-        // по выбранному id получить узел
-        // если тип не равен условному
-        // добавить один дочерний элемент
-        // если узла параллельности, то добавлять два узла с ссцлко отдельно на каждого
-        let node = this.get_node_by_id(this.selected_node_id_1);
+        /*
+
+         // получить объект выбраного узла
+         // установить новому объекту ссылку следующего узла значением выбранного узла
+         // установить новому узлу ссылку следующего узла идентификатором нового узла
+         // установить выбранным узлом новый узел
+
+         */
+
+        let id = uuid.v1();
+        let sel_node = this.get_node_by_id(node_id);
+        this.nodes.set(id, {id:id, type:0, next: sel_node.next, children: [], name:"" });
+        sel_node.next = id;
+        return id;
     }
+    delete_node()
+    {
+        /*
+
+            // получить объект предка
+            // получить объект выбранного узла
+            // предку установить ссылку следующего узла значением следующего узла выбранного объекта
+            // удалить узел из коллекции
+            // установить предка выбранным узлом
+
+        */
+
+        let node = this.get_node_by_id(this.selected_node_id_1);
+        let parent_id = this.parent.get(node.id);
+        let parent = this.get_node_by_id(parent_id);
+        if(parent.next === node.id)
+        {
+            parent.next = node.next;
+        }
+        else
+        {
+            if(node.next === "")
+            {
+                parent.children.shift();
+            }
+            else
+            {
+                parent.children[0] = node.next;
+            }
+        }
+        this.nodes.delete(node.id);
+        this._define_visual_struct();
+        this.select_node(parent_id);
+    }
+
 }
 export default new view_store();
