@@ -3,18 +3,43 @@ import uuid from 'uuid';
 
 let fake_data =
     [
-        {id:"0", type:3, next: "", children: ["1"], name:"root", description:"описание 1" },
-        {id:"1", type:3, next: "", children: ["2"], name:"контекст order", description:"описание 2" },
-        {id:"2", type:3, next: "10", children: ["3"], name:"контекст generate", description:"описание 3" },//
-        {id:"3", type:1, next: "5", children: ["4"], name:"атрибуты не загружены", description:"описание 4" },
-        {id:"4", type:4, next: "", children: [], name:"загрузить атрибуты из БД", description:"описание 5" },
-        {id:"5", type:4, next: "6", children: [], name:"копировать шаблон", description:"описание 6" },
-        {id:"6", type:4, next: "7", children: [], name:"установить переданные значения", description:"описание 7" },
-        {id:"7", type:6, next: "", children: ["8"], name:"заполнить атрибуты заявки", description:"описание 8" },
-        {id:"8", type:4, next: "9", children: [], name:"заполнить параметры продукта", description:"описание 9" },
-        {id:"9", type:4, next: "", children: [], name:"заполнить параметры клиента", description:"описание 10" },
-        {id:"10", type:3, next: "11", children: [], name:"контекст order", description:"описание 11" },
-        {id:"11", type:3, next: "", children: [], name:"контекст template", description:"описание 12" }
+        {id:"0", type:10, next: "", children: ["1"], name:"process", description:"описание 0" },
+        {id:"1", type:4, next: "2", children: ["3"], name:"selector 1", description:"описание 1" },
+        {id:"2", type:4, next: "", children: ["4"], name:"selector 2", description:"описание 2" },
+        {id:"3", type:1, next: "5", children: [], name:"operation 3", description:"описание 3" },
+        {id:"4", type:1, next: "", children: [], name:"operation 4", description:"описание 4" },
+
+        // if
+        {id:"5", type:2, next: "7", children: ["6"], name:"if 5", description:"описание 5" },
+        {id:"6", type:1, next: "", children: [], name:"operation 6", description:"описание 6" },
+
+        // if else
+        {id:"7", type:3, next: "10", children: ["8", "9"], name:"ifelse 7", description:"описание 7" },
+        {id:"8", type:1, next: "", children: [], name:"operation 8", description:"описание 8" },
+        {id:"9", type:1, next: "", children: [], name:"operation 9", description:"описание 9" },
+
+        // while
+        {id:"10", type:5, next: "13", children: ["11"], name:"while 10", description:"описание 10" },
+        {id:"11", type:1, next: "12", children: [], name:"operation 11", description:"описание 11" },
+        {id:"12", type:1, next: "", children: [], name:"operation 12", description:"описание 12" },
+
+        // command
+        {id:"13", type:6, next: "14", children: [], name:"command 13", description:"описание 13" },
+
+        // request
+        {id:"14", type:7, next: "15", children: [], name:"request 14", description:"описание 14" },
+
+        // and
+        {id:"15", type:8, next: "19", children: ["16", "17", "18"], name:"and 15", description:"описание 15" },
+        {id:"16", type:1, next: "", children: [], name:"operation 16", description:"описание 16" },
+        {id:"17", type:1, next: "", children: [], name:"operation 17", description:"описание 17" },
+        {id:"18", type:1, next: "", children: [], name:"operation 18", description:"описание 18" },
+
+        // or
+        {id:"19", type:9, next: "", children: ["20", "21", "22"], name:"or 19", description:"описание 19" },
+        {id:"20", type:1, next: "", children: [], name:"operation 20", description:"описание 20" },
+        {id:"21", type:1, next: "", children: [], name:"operation 21", description:"описание 21" },
+        {id:"22", type:1, next: "", children: [], name:"operation 22", description:"описание 22" }
     ]
 
 class view_store extends EventEmitter
@@ -34,14 +59,16 @@ class view_store extends EventEmitter
             type:
             {
                 NONE: 0,
-                IF: 1,
-                ELSE: 2,
-                SEL: 3,
-                OP:4,
-                CALL: 5,
-                WHILE:6,
-                AND:7,
-                OR:8
+                OPERATION: 1,
+                IF: 2,
+                IFELSE: 3,
+                SELECTOR: 4,
+                WHILE: 5,
+                COMMAND: 6,
+                REQUEST: 7,
+                AND: 8,
+                OR: 9,
+                PROCESS: 10
             }
         };
 
@@ -53,19 +80,19 @@ class view_store extends EventEmitter
         this.collapsed_nodes = new Map();
         this.types = new Map();
         this.selected_node_id_1 = null;
-        //this.selected_node_2 = null;
 
         // initialization
-        this.types.set(0, "none");
-        this.types.set(1, "if");
-        this.types.set(2, "else");
-        this.types.set(3, "sel");
-        this.types.set(4, "op");
-        this.types.set(5, "call");
-        this.types.set(6, "while");
-        this.types.set(7, "and");
-        this.types.set(8, "or");
-        this.types.set(8, "proc");
+        this.types.set(this.c.type.NONE, "none");
+        this.types.set(this.c.type.OPERATION, "operation");
+        this.types.set(this.c.type.IF, "if");
+        this.types.set(this.c.type.IFELSE, "ifelse");
+        this.types.set(this.c.type.SELECTOR, "selector");
+        this.types.set(this.c.type.WHILE, "while");
+        this.types.set(this.c.type.COMMAND, "command");
+        this.types.set(this.c.type.REQUEST, "request");
+        this.types.set(this.c.type.AND, "and");
+        this.types.set(this.c.type.OR, "or");
+        this.types.set(this.c.type.PROCESS, "process");
         fake_data.forEach((i)=>
         {
             this.nodes.set(i.id, i);
@@ -102,22 +129,13 @@ class view_store extends EventEmitter
             v_node.x = x;
             v_node.y = y;
 
-            if (n.next === "")
-            {
-                if(stack.length > 0)// и тип не while
-                {
-                    v_node.next = stack[stack.length - 1];
-                }
-            }
-            else
+            if (n.next !== "")
             {
                 this.parent.set(n.next, n.id); // сохранение ссылки на предка
 
                 stack.push(n.next);
                 level_stack.push(x);
             }
-
-
             let expand_state = 0;// none, open, close
             if(n.children.length > 0)
             {
@@ -129,7 +147,7 @@ class view_store extends EventEmitter
                 else
                 {
                     // отображается открытым со значком -
-                    for(let i = 0; i < n.children.length; i++)
+                    for(let i = n.children.length - 1; i >= 0; i--)
                     {
                         this.parent.set(n.children[i], n.id); // сохранение ссылки на предка
 
