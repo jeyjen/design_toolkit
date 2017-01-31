@@ -75,6 +75,7 @@ class view_store extends EventEmitter
         this.root = "0";
         this.nodes = new Map();
         this.parent = new Map();
+        this.previous = new Map();
         this.v_nodes = new Map();
         this.refs = [];
         this.collapsed_nodes = new Map();
@@ -131,7 +132,7 @@ class view_store extends EventEmitter
 
             if (n.next !== "")
             {
-                this.parent.set(n.next, n.id); // сохранение ссылки на предка
+                this.previous.set(n.next, n.id); // сохранение ссылки на предка
 
                 stack.push(n.next);
                 level_stack.push(x);
@@ -262,6 +263,151 @@ class view_store extends EventEmitter
         this.emit(this.e.on_selected_node_changed);
     }
 
+    set_type(type)
+    {
+        this._set_type(this.selected_node_id_1, type);
+    }
+    _set_type(id, type)
+    {
+        debugger;
+        let node = this.get_node_by_id(id);
+        node.type = type;
+        switch (type)
+        {
+            case this.c.type.NONE:
+            {
+
+            }break;
+            case this.c.type.OPERATION:
+            {
+                for(let i = 0; i < node.children.length; i++)
+                {
+                    // запись в нарушение целостности "не может иметь ни одного потомка"
+                }
+            }break;
+            case this.c.type.IF:
+            {
+                if(node.children.length == 0)
+                {
+                    this._add_child_to(node.id);
+                }
+                else
+                {
+                    if(node.children.length > 1)
+                    {
+                        for(let i = 1; i < node.children.length; i++)
+                        {
+                            // записать в ошибки нарушения целостности
+                        }
+                    }
+                }
+            }break;
+            case this.c.type.IFELSE:
+            {
+                while(node.children.length < 2)
+                {
+                    this._add_child_to(node.id);
+                }
+                if(node.children.length > 2)
+                {
+                    for(let i = 2; i < node.children.length; i++)
+                    {
+                        // записать в ошибки нарушения целостности  "не более двух потомков"
+                    }
+                }
+            }break;
+            case this.c.type.SELECTOR:
+            {
+                // получить предыдущий элемент
+                // получить потомка
+                // если ни один из узлов не является узлом типа SELECTOR
+                    // добавить следующий узел с типом SELECTOR
+                let prev = {type: 0};
+                if(this.previous.has(node.id))
+                {
+                    prev = this.nodes.get(this.previous.get(node.id));
+                }
+                let next = {type: 0}
+                if(node.next !== "")
+                {
+                    next = this.nodes.get(node.next);
+                }
+                if(prev.type != this.c.type.SELECTOR && next.type != this.c.type.SELECTOR)
+                {
+                    let id = this._add_next_to(node.id);
+                    this._set_type(id, this.c.type.SELECTOR);
+                }
+                for(let i = 1; i < node.children.length; i++)
+                {
+                    // записать в ошибки нарушения целостности "не более одного потомка"
+                }
+            }
+            break;
+            case this.c.type.WHILE:
+            {
+                if(node.children.length == 0)
+                {
+                    this._add_child_to(node.id);
+                }
+                else
+                {
+                    for(let i = 1; i < node.children.length; i++)
+                    {
+                        // записать в ошибки нарушения целостности "не более одного потомка"
+                    }
+                }
+            }break;
+            case this.c.type.COMMAND:
+            {
+                for(let i = 0; i < node.children.length; i++)
+                {
+                    // запись в нарушение целостности "не может иметь ни одного потомка"
+                }
+            }break;
+            case this.c.type.REQUEST:
+            {
+                for(let i = 0; i < node.children.length; i++)
+                {
+                    // запись в нарушение целостности "не может иметь ни одного потомка"
+                }
+            }break;
+            case this.c.type.AND:
+            {
+                while(node.children.length < 2)
+                {
+                    this._add_child_to(node.id);
+                }
+            }break;
+            case this.c.type.OR:
+            {
+                while(node.children.length < 2)
+                {
+                    this._add_child_to(node.id);
+                }
+            }break;
+            case this.c.type.PROCESS:
+            {
+                let child_id = 0;
+                if(node.children.length == 0)
+                {
+                    this._add_child_to(node.id);
+                }
+                let child = this.nodes.get(node.children[0]);
+                if(child.next == "")
+                {
+                    this._add_next_to(child.id);
+                }
+                for(let i = 1; i < node.children.length; i++)
+                {
+                    // добавить в ошибки целостности "не более одного потомка"
+                }
+            }break;
+        }
+
+
+        this._define_visual_struct();
+    }
+
     add_child()
     {
         let new_id = this._add_child_to(this.selected_node_id_1);
@@ -283,7 +429,7 @@ class view_store extends EventEmitter
         let id = uuid.v1();
         let sel_node = this.get_node_by_id(node_id);
         let next = "";
-        if(sel_node.children.length == 0 || (sel_node.type === this.c.type.AND || sel_node.type === this.c.type.OR))
+        if(sel_node.children.length == 0 || (sel_node.type === this.c.type.AND || sel_node.type === this.c.type.OR || sel_node.type === this.c.type.IFELSE))
         {
             sel_node.children.push(id);
         }
@@ -294,6 +440,7 @@ class view_store extends EventEmitter
         }
 
         this.nodes.set(id, {id: id, type:0, next: next, children: [], name:"" });
+        this.parent.set(id, node_id);
         return id;
     }
 
@@ -318,6 +465,7 @@ class view_store extends EventEmitter
         let sel_node = this.get_node_by_id(node_id);
         this.nodes.set(id, {id:id, type:0, next: sel_node.next, children: [], name:"" });
         sel_node.next = id;
+        this.previous.set(id, node_id);
         return id;
     }
     delete_node()
