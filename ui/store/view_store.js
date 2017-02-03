@@ -81,6 +81,8 @@ class view_store extends EventEmitter
         this.collapsed_nodes = new Map();
         this.types = new Map();
         this.selected_node_id_1 = null;
+        this.
+
 
         // initialization
         this.types.set(this.c.type.NONE, "none");
@@ -94,6 +96,7 @@ class view_store extends EventEmitter
         this.types.set(this.c.type.AND, "and");
         this.types.set(this.c.type.OR, "or");
         this.types.set(this.c.type.PROCESS, "process");
+
         fake_data.forEach((i)=>
         {
             this.nodes.set(i.id, i);
@@ -406,6 +409,11 @@ class view_store extends EventEmitter
 
 
         this._define_visual_struct();
+    }
+
+    _check_consistency(node)
+    {
+
     }
 
     add_child()
