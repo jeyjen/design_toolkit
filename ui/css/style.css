@@ -1,0 +1,19 @@
+
+.lm_content {
+    background: white;
+    border: 1px solid #ccc;
+    overflow: auto;
+}
+
+.main {
+    background: white;
+    border: 1px solid #ccc;
+    overflow: auto;
+}
+
+body{
+    background-image:  url("../img/cap.png"); /* Добавляем фон */
+    background-size: cover;
+}
+
+

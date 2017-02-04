@@ -19,14 +19,14 @@ module.exports = function() {
 	
 	return {
         entry: {
-            app: ['react-hot-loader/patch', 'webpack-dev-server/client?http://localhost:10001', 'webpack/hot/only-dev-server', './index.js'],
+            app: './index.js',
 			vendor: libs
         },
 		resolve: 
 		{
 			modules: 
 			[
-				path.join(__dirname, "src"),
+				path.join(__dirname, "dist"),
 				"node_modules"
 			]
 		},
@@ -57,28 +57,15 @@ module.exports = function() {
 			]
 		},
         output: {
-            filename: '[hash].[name].js',
+            filename: '[chunkhash].[name].js',
             path: path.resolve(__dirname, 'dist'),
 			publicPath: '/'
         },
 		context: __dirname,
-		devtool: 'inline-source-map',
-		devServer: 
-		{
-			hot: true,
-			// enable HMR on the server
-
-			contentBase: path.resolve(__dirname, 'dist'),
-			// match the output path
-
-			publicPath: '/',
-			// match the output `publicPath`,
-			port:10001
-		},
         plugins: 
 		[
             new webpack.optimize.CommonsChunkPlugin({
-                names: ['vendor', 'manifest'] // manifest - указывает на необходимость сборки всех перечисленных библиотек в единный файл				
+                names: ['vendor'] // manifest - указывает на необходимость сборки всех перечисленных библиотек в единный файл				
             }),
 			new ExtractTextPlugin({
     			filename: "[contenthash]bundle.css",
@@ -91,9 +78,7 @@ module.exports = function() {
 				filename: './index.html',
 				template:'template.html',
 				inject: 'body',
-			chunks: ['manifest','vendor','app'],}),
-			new webpack.HotModuleReplacementPlugin(),
-			// enable HMR globally
+			chunks: ['vendor','app'],}),
 
 			new webpack.NamedModulesPlugin()
 			// prints more readable module names in the browser console on HMR updates
