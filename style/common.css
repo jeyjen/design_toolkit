@@ -1,0 +1,39 @@
+body {
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+header, nav, footer, article, section { display: block; }
+header {
+    width:100%;
+    position:fixed;
+    top:0px;
+    z-index: 1000;
+    background: black;
+}
+footer {
+    background-color: black;
+    width: 100%;
+    bottom: 0;
+    position: fixed;
+}
+nav.breadcrumb {}
+nav.right_sidebar { float: right; width: 20%; }
+footer { clear: both; }
+
+@font-face {
+    font-family: muller; /* Гарнитура шрифта */
+    src: url(font/muller_bold.ttf); /* Путь к файлу со шрифтом */
+}
+@font-face {
+    font-family: exo_regular; /* Гарнитура шрифта */
+    src: url(font/exo/exo2_regular.ttf); /* Путь к файлу со шрифтом */
+}
+
+/*
+src: url(font/vipna_gorgialla_cyrillized.ttf);
+*/
+
+body {
+    font-family: exo_regular, 'Comic Sans MS', cursive;
+}

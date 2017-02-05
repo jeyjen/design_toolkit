@@ -1,0 +1,144 @@
+body {
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+header, nav, footer, article, section { display: block; }
+header {
+    width:100%;
+    position:fixed;
+    top:0px;
+    z-index: 1000;
+    background: black;
+}
+footer {
+    background-color: black;
+    width: 100%;
+    bottom: 0;
+    position: fixed;
+}
+nav.breadcrumb {}
+nav.right_sidebar { float: right; width: 20%; }
+footer { clear: both; }
+
+@font-face {
+    font-family: muller; /* Гарнитура шрифта */
+    src: url(style/font/muller_bold.ttf?hash=8b23c9a); /* Путь к файлу со шрифтом */
+}
+@font-face {
+    font-family: exo_regular; /* Гарнитура шрифта */
+    src: url(style/font/exo/exo2_regular.ttf?hash=af76984); /* Путь к файлу со шрифтом */
+}
+
+/*
+src: url(font/vipna_gorgialla_cyrillized.ttf);
+*/
+
+body {
+    font-family: exo_regular, 'Comic Sans MS', cursive;
+}
+
+.lm_content {
+    background: white;
+    border: 1px solid #ccc;
+    overflow: auto;
+}
+
+
+#main {
+    /* background-image:  url("../img/town.jpg"); /* Добавляем фон */
+    /*background-color: #2e6da4;*/
+
+    background-color:#ffffff;
+    background-size: cover;
+
+    color: black;
+    /*background-color: #000000; /* Чёрный фон */
+    height: 100%; /* Высота максимальна */
+    left: 0; /* Нулевой отступ слева */
+    /*opacity: 0.6; /* Степень прозрачности */
+    position: fixed; /* Фиксированное положение */
+    top: 0; /* Нулевой отступ сверху */
+    width: 100%; /* Ширина максимальна */
+    /*z-index: 100; /* Заведомо быть НАД другими элементами */
+    display: block;
+    margin: 0 auto 0 auto;
+}
+
+.rep{
+    fill: #ffffff;
+    /*stroke: #ffffff;*/
+    /*stroke-width: 2px;*/
+}
+
+.op{
+    fill: #ffffff;
+    /*stroke: #ffffff;*/
+    /*stroke-width: 2px;*/
+}
+
+.op_clicked{
+    fill: #fffaaa;
+}
+
+.link{
+    stroke: #508aba;
+    stroke-width: 1px;
+}
+.arrowHead {
+    fill: #508aba;
+}
+
+::-ms-clear { display: none; }
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: -200%;
+    left: 20%;
+    margin-left: -60px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    /*border-style: solid;*/
+    border-color: #555 transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+.new_year_ban {
+    background-image:  url(img/cap.png?hash=b15df4b); /* Добавляем фон */
+    background-size: cover;
+}
+
+
+
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJidW5kbGUuY3NzP2hhc2g9MWFiMGRiNjhkNWE5NjUwNmQyOGJhNDkwMTMzZjIzY2YiLCJzb3VyY2VSb290IjoiIn0=*/
