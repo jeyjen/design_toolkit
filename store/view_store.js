@@ -194,7 +194,7 @@ class view_store extends EventEmitter
     /*
     * проверяет целостность текущей структуры
     * */
-    _check_archtectural_integration()
+    _check_archtectural_integration(node)
     {
         this.nodes.forEach((node, k, m)=>
         {
@@ -257,7 +257,7 @@ class view_store extends EventEmitter
                     if(prev.type != this.c.type.SELECTOR && next.type != this.c.type.SELECTOR)
                     {
                         this._add_error(node.id, {text:"узел switch должен иметь минимум один последующий и предшествующий"});
-                        // 
+                        //
                     }
                     for(let i = 1; i < node.children.length; i++)
                     {
@@ -373,11 +373,7 @@ class view_store extends EventEmitter
         return null;
     }
 
-    select_node(id)
-    {
-        this.selected_node_id_1 = id;
-        this.emit(this.e.on_selected_node_changed);
-    }
+
     update_node(values)
     {
         if(values.hasOwnProperty('name'))
@@ -432,9 +428,17 @@ class view_store extends EventEmitter
         this.emit(this.e.on_selected_node_changed);
     }
 
+
+
+    select_node(id)
+    {
+        this.selected_node_id_1 = id;
+        this.emit(this.e.on_selected_node_changed);
+    }
     set_type(type)
     {
         this._set_type(this.selected_node_id_1, type);
+        this._define_visual_struct();
     }
     _set_type(id, type)
     {
@@ -443,185 +447,147 @@ class view_store extends EventEmitter
         switch (type)
         {
             case this.c.type.NONE:
-            {
-
-            }break;
+            {}break;
             case this.c.type.OPERATION:
-            {
-                for(let i = 0; i < node.children.length; i++)
-                {
-                    // запись в нарушение целостности "не может иметь ни одного потомка"
-                }
-            }break;
+            {}break;
             case this.c.type.IF:
             {
                 if(node.children.length == 0)
                 {
-                    this._add_child_to(node.id);
-                }
-                else
-                {
-                    if(node.children.length > 1)
-                    {
-                        for(let i = 1; i < node.children.length; i++)
-                        {
-                            // записать в ошибки нарушения целостности
-                        }
-                    }
+                    this._add_child_to(node.id, this.c.type.NONE);
                 }
             }break;
             case this.c.type.IFELSE:
             {
                 while(node.children.length < 2)
                 {
-                    this._add_child_to(node.id);
-                }
-                if(node.children.length > 2)
-                {
-                    for(let i = 2; i < node.children.length; i++)
-                    {
-                        // записать в ошибки нарушения целостности  "не более двух потомков"
-                    }
+                    this._add_child_to(node.id, this.c.type.NONE);
                 }
             }break;
             case this.c.type.SELECTOR:
             {
-                // получить предыдущий элемент
-                // получить потомка
-                // если ни один из узлов не является узлом типа SELECTOR
-                    // добавить следующий узел с типом SELECTOR
-
-
+                while(node.children.length < 2)
+                {
+                    this._add_child_to(node.id, this.c.type.IF);
+                }
             }
-            break;
+                break;
             case this.c.type.WHILE:
             {
                 if(node.children.length == 0)
                 {
                     this._add_child_to(node.id);
                 }
-                else
-                {
-                    for(let i = 1; i < node.children.length; i++)
-                    {
-                        // записать в ошибки нарушения целостности "не более одного потомка"
-                    }
-                }
             }break;
             case this.c.type.COMMAND:
-            {
-                for(let i = 0; i < node.children.length; i++)
-                {
-                    // запись в нарушение целостности "не может иметь ни одного потомка"
-                }
-            }break;
+            {}break;
             case this.c.type.REQUEST:
-            {
-                for(let i = 0; i < node.children.length; i++)
-                {
-                    // запись в нарушение целостности "не может иметь ни одного потомка"
-                }
-            }break;
+            {}break;
             case this.c.type.AND:
             {
                 while(node.children.length < 2)
                 {
-                    this._add_child_to(node.id);
+                    this._add_child_to(node.id, this.c.type.NONE);
                 }
             }break;
             case this.c.type.OR:
             {
                 while(node.children.length < 2)
                 {
-                    this._add_child_to(node.id);
+                    this._add_child_to(node.id, this.c.type.NONE);
                 }
             }break;
             case this.c.type.PROCESS:
             {
-                let child_id = 0;
                 if(node.children.length == 0)
                 {
-                    this._add_child_to(node.id);
-                }
-                let child = this.nodes.get(node.children[0]);
-                if(child.next == "")
-                {
-                    this._add_next_to(child.id);
-                }
-                for(let i = 1; i < node.children.length; i++)
-                {
-                    // добавить в ошибки целостности "не более одного потомка"
+                    this._add_child_to(node.id, this.c.type.NONE);
                 }
             }break;
         }
-
-
-        this._define_visual_struct();
     }
-
-    _check_consistency(node)
-    {
-
-    }
-
     add_child()
     {
         let new_id = this._add_child_to(this.selected_node_id_1);
         this._define_visual_struct();
         this.select_node(new_id);
     }
-    _add_child_to(node_id)
+    _add_child_to(parent_id, type)
     {
-        /*
-
-         // получить объект выбранного узла
-         // если узел уже имеет потомков
-         // новому элементу добавить ссылку следующего узла на первого потомка выбранного узла
-         // выбранному узлу добавить первым элемент в список дочерних
-         // установить новый узел как выбранный
-
-         */
-
         let id = uuid.v1();
-        let sel_node = this.get_node_by_id(node_id);
-        let next = "";
-        if(sel_node.children.length == 0 || (sel_node.type === this.c.type.AND || sel_node.type === this.c.type.OR || sel_node.type === this.c.type.IFELSE))
+        let sel_node = this.get_node_by_id(parent_id);
+
+        if(    sel_node.type === this.c.type.AND
+            || sel_node.type === this.c.type.OR
+            || sel_node.type === this.c.type.IFELSE
+            || sel_node.type === this.c.type.SELECTOR)
         {
             sel_node.children.push(id);
         }
         else
         {
-            next = sel_node.children[0];
-            sel_node.children[0] = id;
+            if(sel_node.children.length > 0)
+            {
+                let prev = this.get_node_by_id(sel_node.children[0]);
+                while(prev.next !== "")
+                {
+                    prev = this.get_node_by_id(prev.next);
+                }
+                prev.next = id;
+            }
+        }
+        this.nodes.set(id, {id: id, type: type, next: "", children: [], name:"" });
+
+        switch (type)
+        {
+            case this.c.type.IF:
+            {
+                this._add_child_to(id, this.c.type.NONE);
+            }break;
+            case this.c.type.IFELSE:
+            {
+                this._add_child_to(id, this.c.type.NONE);
+                this._add_child_to(id, this.c.type.NONE);
+            }break;
+            case this.c.type.SELECTOR:
+            {
+                this._add_child_to(id, this.c.type.IF);
+                this._add_child_to(id, this.c.type.IF);
+            }break;
+            case this.c.type.WHILE:
+            {
+                this._add_child_to(id, this.c.type.NONE);
+            }break;
+            case this.c.type.AND:
+            {
+                this._add_child_to(id, this.c.type.NONE);
+                this._add_child_to(id, this.c.type.NONE);
+            }break;
+            case this.c.type.OR:
+            {
+                this._add_child_to(id, this.c.type.NONE);
+                this._add_child_to(id, this.c.type.NONE);
+            }break;
+            case this.c.type.PROCESS:
+            {
+                this._add_child_to(id, this.c.type.NONE);
+            }break;
         }
 
-        this.nodes.set(id, {id: id, type:0, next: next, children: [], name:"" });
-        this.parent.set(id, node_id);
         return id;
     }
-
     add_next()
     {
-        let new_id = this._add_next_to(this.selected_node_id_1);
+        let new_id = this._add_next_to(this.selected_node_id_1, this.c.type.NONE);
         this._define_visual_struct();
         this.select_node(new_id);
     }
-    _add_next_to(node_id)
+    _add_next_to(node_id, type)
     {
-        /*
-
-         // получить объект выбраного узла
-         // установить новому объекту ссылку следующего узла значением выбранного узла
-         // установить новому узлу ссылку следующего узла идентификатором нового узла
-         // установить выбранным узлом новый узел
-
-         */
-
         let id = uuid.v1();
         let sel_node = this.get_node_by_id(node_id);
-        this.nodes.set(id, {id:id, type:0, next: sel_node.next, children: [], name:"" });
+        this.nodes.set(id, {id:id, type: type, next: sel_node.next, children: [], name:"" });
         sel_node.next = id;
-        this.previous.set(id, node_id);
         return id;
     }
     delete_node()
