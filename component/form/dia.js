@@ -31,12 +31,18 @@ class dia extends component {
         {
 
             let c = color;
+            if(vs.errors.has(v.id))
+            {
+                c = '#F44336';
+            }
             if(vs.selected_node_id_1 == v.id)
             {
                 c = '#FB8C00';
             }
-            els.push(<use xlinkHref={'#' + v.type} transform="scale(1)"  x={this.x(v.x)} y={this.y(v.y)} style={{stroke:c, fill:c}} onClick={this.node_click(v.id)} />);
-            lbls.push(<text x={this.x(v.x) + 15} y={this.y(v.y)} dy="5" style={{fill:c}}>{v.name}</text>);
+
+
+            els.push(<use xlinkHref={'#' + v.type} transform="scale(1)" x={this.x(v.x)} y={this.y(v.y)} style={{stroke:c, fill:c}} onDoubleClick={this.node_double_click(v.id)} onClick={this.node_click(v.id)} />);
+            lbls.push(<text x={this.x(v.x) + 15} y={this.y(v.y)} dy="5" style={{fill:c}} onClick={this.node_click(v.id)}>{v.name}</text>);
         });
 
         let links = vs.refs.map((i)=>
@@ -130,6 +136,20 @@ class dia extends component {
     y(y)
     {
         return this.state.y_offset * y;
+    }
+
+    node_double_click(node_id)
+    {
+        return function (e, id) {
+            e.persist();
+            e.stopPropagation();
+            //console.log(node);
+            //console.log(id);
+            //console.log(e);
+            //console.log(this);
+            //vs.select_node(node_id);
+            vs.scale_to_node(node_id);
+        }.bind(this)
     }
 
     node_click(node_id)
