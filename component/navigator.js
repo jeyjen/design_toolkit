@@ -21,6 +21,8 @@ import ns from '../store/navigation_store';
 import Dia from './form/dia';
 import Detail from './form/detail';
 
+import ScrollArea from 'react-scrollbar';
+
 injectTapEventPlugin();
 
 class navigator extends component {
@@ -45,7 +47,7 @@ class navigator extends component {
 
         var layout = [
             {i: 'a', x: 0, y: 0, w: 16, h: 2},
-            {i: 'b', x: 16, y: 0, w: 4, h: 10}
+            {i: 'b', x: 16, y: 0, w: 4, h: 4}
         ];
 
         let shadow = 'rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px';
@@ -96,13 +98,23 @@ class navigator extends component {
                     </ToolbarGroup>
                 </Toolbar>
                 <ResponsiveReactGridLayout className="layout" margin={[15,15]} layouts={layouts}
+                                           draggableCancel=".nd"
+                                           draggableHandle=".dd"
                                            breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
                                            cols={{lg: 20, md: 8, sm: 4, xs: 1, xxs: 6}}>
                     <div key={'a'} style={style}>
-                        <Dia style={{display:'flex'}}/>
+                        <ScrollArea
+                            speed={1}
+                            className="scrl_area"
+                            contentClassName="scrl_content"
+                            horizontal={false}
+                        >
+                        <Dia style={{height:'100%'}}/>
+                        </ScrollArea>
                     </div>
-                    <div  key={'b'}>
-                        <Detail style={{height:'100%'}}/>
+                    <div  key={'b'} style={style}>
+                            <div className="dd">dd</div>
+                            <Detail className="nd" style={{height:'100%'}}/>
                     </div>
                 </ResponsiveReactGridLayout>
             </section>

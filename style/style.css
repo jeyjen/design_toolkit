@@ -99,5 +99,13 @@
     background-image:  url("../img/cap.png"); /* Добавляем фон */
     background-size: cover;
 }
+.scrl_area
+{
+    height: 100%;
+}
+.scrl_content
+{
+    height: 100%;
+}
 
 
