@@ -75,6 +75,8 @@ class view_store extends EventEmitter
 
         this.root = "0";
         this.nodes = new Map();
+        this.actual_root = "0"; // постоянная и не изменяемая переменная для данной структуры
+        this.hierarchy = new Map();
         this.parent = new Map();
         this.previous = new Map();
         this.v_nodes = new Map();
@@ -103,13 +105,21 @@ class view_store extends EventEmitter
             this.nodes.set(i.id, i);
         });
 
+        this._update_struct();
         this._define_visual_struct();
     }
 
-    _define_visual_struct()
+    /*
+    * определяет всю структуру по списку nodes
+    * */
+    _update_struct()
     {
         this._define_inharitance_refs();
         this._check_archtectural_integration();
+        this._define_hierarchy();
+    }
+    _define_visual_struct()
+    {
         this.v_nodes.clear();
 
         let stack = [];
@@ -135,7 +145,7 @@ class view_store extends EventEmitter
             v_node.x = x;
             v_node.y = y;
 
-            if (n.next !== "")
+            if (n.id !== this.root && n.next !== "")
             {
                 stack.push(n.next);
                 level_stack.push(x);
@@ -313,6 +323,47 @@ class view_store extends EventEmitter
 
 
     }
+    _define_hierarchy()
+    {
+        this.hierarchy.clear();
+        let stack = [];
+        let level_stack = [];
+        let parent = [];
+        parent.push("");
+
+        let x = 1;
+        stack.push(this.actual_root);
+        level_stack.push(x);
+
+        let prev_x = x;
+
+        while (stack.length > 0)
+        {
+            let n = this.nodes.get(stack.pop());
+            let x = level_stack.pop();
+            if(x < prev_x)
+            {
+                parent.pop();
+            }
+            this.hierarchy.set(n.id, parent[parent.length - 1]);
+
+            if (n.id !== this.actual_root && n.next !== "")
+            {
+                stack.push(n.next);
+                level_stack.push(x);
+            }
+            if(n.children.length > 0)
+            {
+                parent.push(n.id);
+                for(let i = n.children.length - 1; i >= 0; i--)
+                {
+                    stack.push(n.children[i]);
+                    level_stack.push(x + 1);
+                }
+            }
+            prev_x = x;
+        }
+    }
     _add_error(id, error)
     {
         if(this.errors.has(id))
@@ -341,7 +392,7 @@ class view_store extends EventEmitter
                 });
             }
 
-            if(v.next.length > 0)
+            if(v.next !== "" && this.v_nodes.has(v.next))
             {
                 let next = this.v_nodes.get(v.next);
                 this.refs.push({x1:v.x, y1:v.y, x2:next.x, y2: next.y});
@@ -488,6 +539,7 @@ class view_store extends EventEmitter
                 }
             }break;
         }
+        this._update_struct();
     }
     add_child()
     {
@@ -560,6 +612,7 @@ class view_store extends EventEmitter
                 this._add_child_to(id, this.c.type.NONE);
             }break;
         }
+        this._update_struct();
 
         return id;
     }
@@ -575,6 +628,7 @@ class view_store extends EventEmitter
         let sel_node = this.get_node_by_id(node_id);
         this.nodes.set(id, {id:id, type: type, next: sel_node.next, children: [], name:"" });
         sel_node.next = id;
+        this._update_struct();
         return id;
     }
     delete_node()
@@ -611,7 +665,6 @@ class view_store extends EventEmitter
         this._define_visual_struct();
         this.select_node(parent_id);
     }
-
     scale_to_node(node_id)
     {
         this.root = node_id;
