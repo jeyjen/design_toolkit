@@ -9,9 +9,7 @@ import IconLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import IconRight from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
 import IconButton from 'material-ui/IconButton';
 
-import Sect from '../../control/sect';
-import Flex from '../../control/sect';
-import Paper from 'material-ui/Paper';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 import vs from '../../store/view_store';
 
@@ -39,7 +37,10 @@ class detail extends component {
         let name = node == null? "" : node.name;
 
         return (
-            <section style={this.props.style}>
+            <Scrollbars
+                autoHide
+            >
+            <section style={{width:'100%', height:'100%'}}>
                 <section>
                     <IconButton
                         onTouchTap={()=>{vs.add_child()}}
@@ -162,7 +163,9 @@ class detail extends component {
                         rows={3}
                     />
                 </section>
+
             </section>
+            </Scrollbars>
         );
     }
 
@@ -171,6 +174,9 @@ class detail extends component {
 export default detail;
 
 /*
+
+
+
 
  <g id="proc" transform="translate(-12,-12)">
 

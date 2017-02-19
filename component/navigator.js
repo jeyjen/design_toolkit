@@ -1,40 +1,28 @@
 import React from 'react';
 import {Responsive, WidthProvider} from 'react-grid-layout';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import { Scrollbars } from 'react-custom-scrollbars';
+
+import DragIcon from 'material-ui/svg-icons/editor/drag-handle';
 
 import component from '../engine/component';
 
-import injectTapEventPlugin from 'react-tap-event-plugin';
-
-import Badge from 'material-ui/Badge';
-import NotificationsIcon from 'material-ui/svg-icons/social/notifications';
-import IconMenu from 'material-ui/IconMenu';
-import IconButton from 'material-ui/IconButton';
-import FontIcon from 'material-ui/FontIcon';
-import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
-import MenuItem from 'material-ui/MenuItem';
-import DropDownMenu from 'material-ui/DropDownMenu';
-import RaisedButton from 'material-ui/RaisedButton';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
-const ResponsiveReactGridLayout = WidthProvider(Responsive);
-
-import ns from '../store/navigation_store';
+import Toolbar from './toolbar';
 import Dia from './form/dia';
 import Detail from './form/detail';
 
-import ScrollArea from 'react-scrollbar';
+import ns from '../store/navigation_store';
+import cs from '../store/common';
 
+const ResponsiveReactGridLayout = WidthProvider(Responsive);
 injectTapEventPlugin();
 
 class navigator extends component {
     constructor(props) {
         super(props);
         this.state =
-        {
-            value: 3
-        }
+        {}
     }
-
-    handleChange = (event, index, value) => this.setState({value})
 
     componentDidMount() {
         this.on(ns, ns.event.on_view_changed);
@@ -44,84 +32,47 @@ class navigator extends component {
         this.off(ns, ns.event.on_view_changed);
     }
     render() {
-
-        var layout = [
-            {i: 'a', x: 0, y: 0, w: 16, h: 2},
-            {i: 'b', x: 16, y: 0, w: 4, h: 4}
-        ];
-
         let shadow = 'rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px';
 
         let style = {background:'#ffffff', boxShadow:shadow};
-        var layouts = {lg:layout};
-
 
         return (
             <section>
-                <Toolbar>
-                    <ToolbarGroup firstChild={true}>
-                        <DropDownMenu value={this.state.value} onChange={this.handleChange}>
-                            <MenuItem value={1} primaryText="All Broadcasts" />
-                            <MenuItem value={2} primaryText="All Voice" />
-                            <MenuItem value={3} primaryText="All Text" />
-                            <MenuItem value={4} primaryText="Complete Voice" />
-                            <MenuItem value={5} primaryText="Complete Text" />
-                            <MenuItem value={6} primaryText="Active Voice" />
-                            <MenuItem value={7} primaryText="Active Text" />
-                        </DropDownMenu>
+                <Toolbar/>
+                <ResponsiveReactGridLayout
+                    className="layout"
+                    margin={cs._margin}
+                    layouts={cs._layouts}
+                    //draggableCancel=".no_drag_aria"
+                    draggableHandle=".drag_area"
+                    rowHeight={cs._row_height}
+                    breakpoints={cs._breakpoints}
+                    cols={cs._cols}
+                    onLayoutChange={(l, ls)=>{cs.update_layouts(l, ls); this.upd()}}
+                >
+                    <div key={'dia'} style={style}>
+                        <div className="drag_area">
+                            <DragIcon/>
+                        </div>
+                        <Dia/>
+                    </div>
+                    
+                    <div  key={'detail'} style={style}>
+                        <div className="drag_area">
+                            <DragIcon/>
+                        </div>
+                        <Detail/>
+                    </div>
 
-                        <Badge
-                            badgeContent={10}
-                            secondary={true}
-                            badgeStyle={{top: 20, right: 20}}
-                        >
-                            <IconButton tooltip="Notifications">
-                                <NotificationsIcon />
-                            </IconButton>
-                        </Badge>
-                    </ToolbarGroup>
-                    <ToolbarGroup>
-                        <ToolbarTitle text="Options" />
-                        <FontIcon className="muidocs-icon-custom-sort" />
-                        <ToolbarSeparator />
-                        <RaisedButton label="генерировать" primary={true} />
-                        <IconMenu
-                            iconButtonElement={
-                  <IconButton touch={true}>
-                    <NavigationExpandMoreIcon />
-                  </IconButton>
-                }
-                        >
-                            <MenuItem primaryText="Download" />
-                            <MenuItem primaryText="More Info" />
-                        </IconMenu>
-                    </ToolbarGroup>
-                </Toolbar>
-                <ResponsiveReactGridLayout className="layout" margin={[15,15]} layouts={layouts}
-                                           draggableCancel=".nd"
-                                           draggableHandle=".dd"
-                                           breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
-                                           cols={{lg: 20, md: 8, sm: 4, xs: 1, xxs: 6}}>
-                    <div key={'a'} style={style}>
-                        <ScrollArea
-                            speed={1}
-                            className="scrl_area"
-                            contentClassName="scrl_content"
-                            horizontal={false}
-                        >
-                        <Dia style={{height:'100%'}}/>
-                        </ScrollArea>
-                    </div>
-                    <div  key={'b'} style={style}>
-                            <div className="dd">dd</div>
-                            <Detail className="nd" style={{height:'100%'}}/>
-                    </div>
                 </ResponsiveReactGridLayout>
             </section>
         );
     }
+    
 }
 export default navigator;
+
+//<img className="drag_area" src={'../img/ico/drag.svg'} width={20} height={20}/>
 
 /*
  <Viewport>

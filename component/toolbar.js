@@ -1,7 +1,14 @@
 import React from 'react';
 import IconButton from 'material-ui/IconButton';
-import MenuIcon from 'material-ui/svg-icons/navigation/menu';
-import Sect from '../control/sect';
+import Badge from 'material-ui/Badge';
+import NotificationsIcon from 'material-ui/svg-icons/social/notifications';
+import IconMenu from 'material-ui/IconMenu';
+import FontIcon from 'material-ui/FontIcon';
+import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
+import MenuItem from 'material-ui/MenuItem';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import RaisedButton from 'material-ui/RaisedButton';
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 
 import component from '../engine/component';
 
@@ -13,12 +20,16 @@ class toolbar extends component {
     constructor(props) {
         super(props);
         this.state =
-        {};
+        {
+            value: 1
+        }
         this.on_menu_tap = this.on_menu_tap.bind(this);
         this.on_sidebar_request = this.on_sidebar_request.bind(this);
         this.on_menu_item_tap = this.on_menu_item_tap.bind(this);
         this.on_contour_changed = this.on_contour_changed.bind(this);
     }
+
+    handleChange = (event, index, value) => this.setState({value})
 
     componentDidMount()
     {
@@ -56,34 +67,25 @@ class toolbar extends component {
     }
 
     render() {
-
-        let actions = null;
-        // switch (cs.state.sel_view)
-        // {
-        //     case 'product':
-        //     {
-        //         actions = <IconButton
-        //             onTouchTap={()=>{this.state.generate_conf_open = true; this.setState(this.state)}}
-        //             disabled={ps.state.sel_product == null}
-        //             touch={true}
-        //         >
-        //             <IconGavel/>
-        //         </IconButton>;
-        //     }break;
-        //     case 'dashboard':
-        //     {
-        //
-        //     }break;
-        // }
         return (
-            <Sect>
-                <IconButton
-                    onTouchTap={()=>{ns.sidebar_open()}}
-                    touch={true} >
-                    <MenuIcon />
-                </IconButton>
-            </Sect>
+            <Toolbar>
+                <ToolbarGroup firstChild={true}>
 
+                </ToolbarGroup>
+                <ToolbarGroup>
+
+                    <IconMenu
+                        iconButtonElement={
+                          <IconButton touch={true}>
+                            <NavigationExpandMoreIcon />
+                          </IconButton>
+                        }
+                    >
+                        <MenuItem primaryText="Download" />
+                        <MenuItem primaryText="More Info" />
+                    </IconMenu>
+                </ToolbarGroup>
+            </Toolbar>
         );
     }
 

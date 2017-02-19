@@ -72,8 +72,7 @@ class dia extends component {
         })
 
         return (
-            <div style={this.props.style}>
-                <svg style={{width:'100%', height:'100%'}} onClick={()=>{ vs.select_node(null);}}>
+                <svg className={this.props.className} style={{width:'100%', height:'100%'}} onClick={()=>{ vs.select_node(null);}}>
                     <defs>
                         <marker id="arrow" viewBox=" 0 0 10 10" markerWidth="5" markerHeight="5" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
                             <path d="M0,0 L0,6 L6,3 z" fill={color} />
@@ -127,7 +126,6 @@ class dia extends component {
                     {els}
                     {lbls}
                 </svg>
-            </div>
         );
     }
 
