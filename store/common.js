@@ -41,6 +41,7 @@ class common extends store
         this._margin = [15, 15];
         this._sel_form = null;
         this._layouts = this.get_from_ls('layouts');
+        this._views = ["detail", "dia"];
 
         //this.remove_from_ls('layouts');
         if(this._layouts === null)

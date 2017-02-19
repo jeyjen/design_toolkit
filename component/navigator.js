@@ -17,6 +17,11 @@ import cs from '../store/common';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 injectTapEventPlugin();
 
+
+let view = {};
+view['dia'] = <Dia/>;
+view['detail'] = <Detail/>;
+
 class navigator extends component {
     constructor(props) {
         super(props);
@@ -35,7 +40,7 @@ class navigator extends component {
         let shadow = 'rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px';
 
         let style = {background:'#ffffff', boxShadow:shadow};
-
+        
         return (
             <section>
                 <Toolbar/>
@@ -56,7 +61,7 @@ class navigator extends component {
                         </div>
                         <Dia/>
                     </div>
-                    
+
                     <div  key={'detail'} style={style}>
                         <div className="drag_area">
                             <DragIcon/>
@@ -67,6 +72,15 @@ class navigator extends component {
                 </ResponsiveReactGridLayout>
             </section>
         );
+    }
+
+    get_view(name)
+    {
+        switch (name)
+        {
+            case 'dia': return <Dia/>;
+            case 'detail': return <Detail/>
+        }
     }
     
 }
