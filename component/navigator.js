@@ -40,7 +40,21 @@ class navigator extends component {
         let shadow = 'rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px';
 
         let style = {background:'#ffffff', boxShadow:shadow};
+
+        let arr = [];
+
+        cs._views.forEach((i)=>
+        {
+            let v = <div key={i} style={style}>
+                <div className="drag_area">
+                    <DragIcon/>
+                </div>
+                {view[i]}
+            </div>
+            arr.push(v);
+        });
         
+
         return (
             <section>
                 <Toolbar/>
@@ -55,20 +69,7 @@ class navigator extends component {
                     cols={cs._cols}
                     onLayoutChange={(l, ls)=>{cs.update_layouts(l, ls); this.upd()}}
                 >
-                    <div key={'dia'} style={style}>
-                        <div className="drag_area">
-                            <DragIcon/>
-                        </div>
-                        <Dia/>
-                    </div>
-
-                    <div  key={'detail'} style={style}>
-                        <div className="drag_area">
-                            <DragIcon/>
-                        </div>
-                        <Detail/>
-                    </div>
-
+                    {arr}
                 </ResponsiveReactGridLayout>
             </section>
         );

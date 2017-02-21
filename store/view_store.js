@@ -88,17 +88,17 @@ class view_store extends EventEmitter
         this.errors = new Map();
 
         // initialization
-        this.types.set(this.c.type.NONE, "none");
-        this.types.set(this.c.type.OPERATION, "operation");
-        this.types.set(this.c.type.IF, "if");
-        this.types.set(this.c.type.IFELSE, "ifelse");
-        this.types.set(this.c.type.SELECTOR, "selector");
-        this.types.set(this.c.type.WHILE, "while");
-        this.types.set(this.c.type.COMMAND, "command");
-        this.types.set(this.c.type.REQUEST, "request");
-        this.types.set(this.c.type.AND, "and");
-        this.types.set(this.c.type.OR, "or");
-        this.types.set(this.c.type.PROCESS, "process");
+        this.types.set(this.c.type.NONE, "_none");
+        this.types.set(this.c.type.OPERATION, "_operation");
+        this.types.set(this.c.type.IF, "_if");
+        this.types.set(this.c.type.IFELSE, "_ifelse");
+        this.types.set(this.c.type.SELECTOR, "_selector");
+        this.types.set(this.c.type.WHILE, "_while");
+        this.types.set(this.c.type.COMMAND, "_command");
+        this.types.set(this.c.type.REQUEST, "_request");
+        this.types.set(this.c.type.AND, "_and");
+        this.types.set(this.c.type.OR, "_or");
+        this.types.set(this.c.type.PROCESS, "_process");
 
         fake_data.forEach((i)=>
         {

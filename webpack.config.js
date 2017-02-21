@@ -73,7 +73,7 @@ module.exports = function() {
 
 			publicPath: '/',
 			// match the output `publicPath`,
-			port:10001
+			port:10000
 		},
         plugins: 
 		[
