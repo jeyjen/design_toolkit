@@ -73,10 +73,11 @@ class view_store extends EventEmitter
         };
 
 
+        this.actual_root = "0"; // постоянная и не изменяемая переменная для данной структуры
         this.root = "0";
         this.nodes = new Map();
-        this.actual_root = "0"; // постоянная и не изменяемая переменная для данной структуры
         this.hierarchy = new Map();
+        this.visual_parents = [];
         this.parent = new Map();
         this.previous = new Map();
         this.v_nodes = new Map();
@@ -120,6 +121,7 @@ class view_store extends EventEmitter
     }
     _define_visual_struct()
     {
+        this._define_visual_hierarchy()
         this.v_nodes.clear();
 
         let stack = [];
@@ -362,6 +364,18 @@ class view_store extends EventEmitter
                 }
             }
             prev_x = x;
+        }
+    }
+    _define_visual_hierarchy()
+    {
+        // пока предок находится
+            // добавлить в конец списка предка.
+        this.visual_parents.length = 0;
+        let n = this.root;
+        while(this.hierarchy.get(n) !== "")
+        {
+            n = this.hierarchy.get(n);
+            this.visual_parents.unshift(n);
         }
     }
     _add_error(id, error)

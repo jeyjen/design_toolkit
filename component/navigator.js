@@ -10,6 +10,7 @@ import component from '../engine/component';
 import Toolbar from './toolbar';
 import Dia from './form/dia';
 import Detail from './form/detail';
+import Hierarchy from './form/node_hierarchy';
 
 import ns from '../store/navigation_store';
 import cs from '../store/common';
@@ -21,6 +22,7 @@ injectTapEventPlugin();
 let view = {};
 view['dia'] = <Dia/>;
 view['detail'] = <Detail/>;
+view['hierarchy'] = <Hierarchy/>;
 
 class navigator extends component {
     constructor(props) {

@@ -5,26 +5,31 @@ const default_layouts =
 {
     lg:
     [
-        {i: 'dia', x: 0, y: 0, w: 16, h: 2},
-        {i: 'detail', x: 16, y: 0, w: 4, h: 4}
+        {i: 'hierarchy', x: 0, y: 0, w: 4, h: 6},
+        {i: 'dia', x: 4, y: 0, w: 12, h: 7},
+        {i: 'detail', x: 16, y: 0, w: 4, h: 5}
     ],
     md:
     [
+        {i: 'hierarchy', x: 0, y: 0, w: 4, h: 6},
         {i: 'dia', x: 0, y: 0, w: 16, h: 2},
         {i: 'detail', x: 16, y: 0, w: 4, h: 4}
     ],
     sm:
     [
+        {i: 'hierarchy', x: 0, y: 0, w: 4, h: 6},
         {i: 'dia', x: 0, y: 0, w: 16, h: 2},
         {i: 'detail', x: 16, y: 0, w: 4, h: 4}
     ],
     xs:
     [
+        {i: 'hierarchy', x: 0, y: 0, w: 4, h: 6},
         {i: 'dia', x: 0, y: 0, w: 16, h: 2},
         {i: 'detail', x: 16, y: 0, w: 4, h: 4}
     ],
     xxs:
     [
+        {i: 'hierarchy', x: 0, y: 0, w: 4, h: 6},
         {i: 'dia', x: 0, y: 0, w: 16, h: 2},
         {i: 'detail', x: 16, y: 0, w: 4, h: 4}
     ]
@@ -41,9 +46,9 @@ class common extends store
         this._margin = [15, 15];
         this._sel_form = null;
         this._layouts = this.get_from_ls('layouts');
-        this._views = ["detail", "dia"];
+        this._views = ['detail', 'dia', 'hierarchy'];
 
-        //this.remove_from_ls('layouts');
+        this.remove_from_ls('layouts');
         if(this._layouts === null)
         {
             this._layouts = default_layouts;

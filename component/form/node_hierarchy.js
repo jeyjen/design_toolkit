@@ -2,13 +2,13 @@ import React from 'react';
 import component from '../../engine/component';
 import vs from '../../store/view_store';
 
-class dia extends component {
+class node_hierarchy extends component {
     constructor(props) {
         super(props);
         this.state =
         {
-            x_offset: this.props.x_offset === undefined? 30: this.props.x_offset,
-            y_offset: this.props.y_offset === undefined? 30: this.props.y_offset
+            x_offset: this.props.x_offset === undefined? 7: this.props.x_offset,
+            y_offset: this.props.y_offset === undefined? 22: this.props.y_offset
         };
 
     }
@@ -28,50 +28,19 @@ class dia extends component {
         let els = [];
         let lbls = [];
         let key = 1;
-        vs.v_nodes.forEach((v, k, m)=>
+
+        let c = color;
+        let x = 0;
+        let y = 0;
+        for(let i = 0; i < vs.visual_parents.length; i++)
         {
-
-            let c = color;
-            if(vs.errors.has(v.id))
-            {
-                c = '#F44336';
-            }
-            if(vs.selected_node_id_1 == v.id)
-            {
-                c = '#FB8C00';
-            }
-
-
-            els.push(<use key={key++} xlinkHref={'#' + v.type} transform="scale(1)" x={this.x(v.x)} y={this.y(v.y)} style={{stroke:c, fill:c}} onDoubleClick={this.node_double_click(v.id)} onClick={this.node_click(v.id)} />);
-            lbls.push(<text key={key++} x={this.x(v.x) + 15} y={this.y(v.y)} dy="5" style={{fill:c}} onClick={this.node_click(v.id)}>{v.name}</text>);
-        });
-
-        let links = vs.refs.map((i)=>
-        {
-            let d = "";
-
-            if(i.x2 > i.x1)// для потомков
-            {
-                d += "M" + (this.x(i.x1) + 8) + " " + (this.y(i.y1) + 8);
-                d += " L " + (this.x(i.x2) - 9) + " " + (this.y(i.y2) - 9);
-            }
-            else if(i.x2 == i.x1) // для узлов на одном уровне
-            {
-                d += "M" + this.x(i.x1) + " " + (this.y(i.y1) + 11);
-                d += " L " + this.x(i.x2) + " " + (this.y(i.y2) - 12);
-            }
-            else if(i.x2 < i.x1 && i.y2 > i.y1 )// для следующих на уровень выше
-            {
-                d += "M" + (this.x(i.x1) - 8) + " " + (this.y(i.y1) + 8);
-                d += " L " + (this.x(i.x2) + 9) + " " + (this.y(i.y2) - 9);
-            }
-            else if(i.x2 < i.x1 && i.y2 < i.y1) // для циклов (возврат к предыдущим на уровень выше)
-            {
-
-            }
-            return <path key={key++} d={d} stroke={'#CFD8DC'} strokeWidth={1} fill="none" markerEnd="url(#arrow)"></path>
-        })
-
+            x++;
+            y++;
+            let n = vs.nodes.get(vs.visual_parents[i]);
+            let type = vs.types.get(n.type);
+            els.push(<use key={key++} xlinkHref={'#' + type} transform="scale(1)" x={this.x(x)} y={this.y(y)} style={{stroke:c, fill:c}} onDoubleClick={this.node_double_click(n.id)} onClick={this.node_click(n.id)} />);
+            lbls.push(<text key={key++} x={this.x(x) + 15} y={this.y(y)} dy="5" style={{fill:c}} onClick={this.node_click(n.id)}>{n.name}</text>);
+        }
         return (
                 <svg className={this.props.className} style={{width:'100%', height:'100%'}} onClick={()=>{ vs.select_node(null);}}>
                     <defs>
@@ -123,7 +92,6 @@ class dia extends component {
                             <ellipse cx="12" cy="12" rx="9" ry="9" style={{fillOpacity:".01", strokeWidth:2}}/>
                         </g>
                     </defs>
-                    {links}
                     {els}
                     {lbls}
                 </svg>
@@ -132,7 +100,7 @@ class dia extends component {
 
     x(x)
     {
-        return this.state.x_offset * x;
+        return this.state.x_offset * x + 10;
     }
     y(y)
     {
@@ -166,7 +134,7 @@ class dia extends component {
         }.bind(this)
     }
 }
-export default dia;
+export default node_hierarchy;
 
 /*
 
