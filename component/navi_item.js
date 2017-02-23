@@ -2,8 +2,7 @@ import React from 'react';
 import {Responsive, WidthProvider} from 'react-grid-layout';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import { Scrollbars } from 'react-custom-scrollbars';
-
-import DragIcon from 'material-ui/svg-icons/editor/drag-handle';
+import IconDrag from 'material-ui/svg-icons/editor/drag-handle';
 
 import component from '../engine/component';
 
@@ -19,16 +18,15 @@ const ResponsiveReactGridLayout = WidthProvider(Responsive);
 injectTapEventPlugin();
 
 
-let view = {};
-view['dia'] = <Dia/>;
-view['detail'] = <Detail/>;
-view['hierarchy'] = <Hierarchy/>;
-
 class navigator extends component {
     constructor(props) {
         super(props);
         this.state =
-        {}
+        {
+            view:{}
+        }
+
+        this.on_layout_changed = this.on_layout_changed.bind(this);
     }
 
     componentDidMount() {
@@ -48,15 +46,18 @@ class navigator extends component {
         cs._views.forEach((i)=>
         {
             let v = <div key={i} style={style}>
-                <div className="drag_area">
-                    <DragIcon/>
+                <div>
+                    <IconDrag className="drag_area"/>
                 </div>
-                {view[i]}
+                <Scrollbars
+                    autoHide
+                    style={{height:this.state.view[i] * cs._row_height + 30}}
+                >
+                {this.get_view(i)}
+                </Scrollbars>
             </div>
             arr.push(v);
         });
-        
-
         return (
             <section>
                 <Toolbar/>
@@ -69,12 +70,24 @@ class navigator extends component {
                     rowHeight={cs._row_height}
                     breakpoints={cs._breakpoints}
                     cols={cs._cols}
-                    onLayoutChange={(l, ls)=>{cs.update_layouts(l, ls); this.upd()}}
+                    onLayoutChange={this.on_layout_changed}
                 >
                     {arr}
                 </ResponsiveReactGridLayout>
             </section>
         );
+    }
+    
+    on_layout_changed(layout, layouts)
+    {
+        cs.update_layouts(layout, layouts);
+        this.state.view = {};
+        layout.forEach((i)=>
+        {
+            this.state.view[i.i] = i.h;
+        });
+
+        this.upd();
     }
 
     get_view(name)
@@ -82,7 +95,8 @@ class navigator extends component {
         switch (name)
         {
             case 'dia': return <Dia/>;
-            case 'detail': return <Detail/>
+            case 'detail': return <Detail/>;
+            case 'hierarchy': return <Hierarchy/>;
         }
     }
     
