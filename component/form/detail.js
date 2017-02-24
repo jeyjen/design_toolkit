@@ -9,7 +9,6 @@ import IconLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
 import IconRight from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
 import IconButton from 'material-ui/IconButton';
 
-import { Scrollbars } from 'react-custom-scrollbars';
 
 import vs from '../../store/view_store';
 
@@ -37,9 +36,6 @@ class detail extends component {
         let name = node == null? "" : node.name;
 
         return (
-            <Scrollbars
-                autoHide
-            >
             <section style={{width:'100%', height:'100%'}}>
                 <section>
                     <IconButton
@@ -163,9 +159,9 @@ class detail extends component {
                         rows={3}
                     />
                 </section>
-
+                
             </section>
-            </Scrollbars>
+
         );
     }
 

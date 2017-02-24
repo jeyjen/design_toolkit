@@ -7,10 +7,12 @@ import FontIcon from 'material-ui/FontIcon';
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
-import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
-
+import Popover from 'material-ui/Popover';
+import Menu from 'material-ui/Menu';
 import component from '../engine/component';
+
 
 // stores
 import ns  from '../store/navigation_store';
@@ -21,7 +23,8 @@ class toolbar extends component {
         super(props);
         this.state =
         {
-            value: 1
+            value: 1,
+            open: false
         }
         this.on_menu_tap = this.on_menu_tap.bind(this);
         this.on_sidebar_request = this.on_sidebar_request.bind(this);
@@ -66,11 +69,43 @@ class toolbar extends component {
         this.setState(this.state);
     }
 
+    handleRequestClose = () => {
+        this.setState({
+            open: false,
+        });
+    };
+    handleTouchTap = (event) => {
+        // This prevents ghost click.
+        event.preventDefault();
+
+        this.setState({
+            open: true,
+            anchorEl: event.currentTarget,
+        });
+    };
+
     render() {
         return (
             <Toolbar>
                 <ToolbarGroup firstChild={true}>
-
+                    <FlatButton
+                        onTouchTap={this.handleTouchTap}
+                        label="вид"
+                    />
+                    <Popover
+                        open={this.state.open}
+                        anchorEl={this.state.anchorEl}
+                        anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+                        targetOrigin={{horizontal: 'left', vertical: 'top'}}
+                        onRequestClose={this.handleRequestClose}
+                    >
+                        <Menu>
+                            <MenuItem primaryText="Refresh" />
+                            <MenuItem primaryText="Help &amp; feedback" />
+                            <MenuItem primaryText="Settings" />
+                            <MenuItem primaryText="Sign out" />
+                        </Menu>
+                    </Popover>
                 </ToolbarGroup>
                 <ToolbarGroup>
 

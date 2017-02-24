@@ -10,8 +10,7 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import IconSetting from 'material-ui/svg-icons/action/settings';
-import IconView from 'material-ui/svg-icons/action/view-week';
-
+import IconView from 'material-ui/svg-icons/content/save';
 
 import component from '../engine/component';
 
@@ -28,9 +27,9 @@ const ResponsiveReactGridLayout = WidthProvider(Responsive);
 injectTapEventPlugin();
 
 let view = {};
-view['dia'] = {main:Dia, setting:null};
+view['dia'] = {main:Dia, setting:function (props) { return(<div>настройки</div>)}};
 view['detail'] = {main:Detail, setting:null};
-view['hierarchy'] = {main:Hierarchy, setting:null};
+view['hierarchy'] = {main:Hierarchy, setting:function (props) { return(<div>настройки2</div>)}};
 
 class navigator extends component {
     constructor(props) {
@@ -66,20 +65,20 @@ class navigator extends component {
         {
             let title = cs._titles.get(type);
 
-            let icon = null;
+            let icon = <span/>;
             let Content = null;
             if(this.state.is_main_view[type])
             {
                 Content = this.get_main(type);
                 if(this.is_has_setting_view(type))
                 {
-                    icon = <IconButton><IconSetting/></IconButton>;
+                    icon = <IconButton onTouchTap={this.show_settings(type)}><IconSetting/></IconButton>;
                 }
             }
             else
             {
                 Content = this.get_setting(type);
-                icon = <IconButton><IconView/></IconButton>;
+                icon = <IconButton onTouchTap={this.show_view(type)}><IconView/></IconButton>;
             }
             
             let v =
@@ -113,6 +112,7 @@ class navigator extends component {
                 <ResponsiveReactGridLayout
                     className="layout"
                     margin={cs._margin}
+                    containerPadding={[5,5]}
                     layouts={cs._layouts}
                     //draggableCancel=".no_drag_aria"
                     draggableHandle=".drag_area"
@@ -126,7 +126,24 @@ class navigator extends component {
             </section>
         );
     }
-    
+
+    show_settings(type)
+    {
+        return function (e, id) {
+            e.persist();
+            this.state.is_main_view[type] = false;
+            this.upd();
+        }.bind(this)
+    }
+
+    show_view(type)
+    {
+        return function (e, id) {
+            e.persist();
+            this.state.is_main_view[type] = true;
+            this.upd();
+        }.bind(this)
+    }
     on_layout_changed(layout, layouts)
     {
         cs.update_layouts(layout, layouts);
@@ -145,7 +162,7 @@ class navigator extends component {
 
     is_has_setting_view(type)
     {
-        return view[type] !== null;
+        return view[type].setting !== null;
     }
 
 

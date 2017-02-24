@@ -7,8 +7,8 @@ class node_hierarchy extends component {
         super(props);
         this.state =
         {
-            x_offset: this.props.x_offset === undefined? 7: this.props.x_offset,
-            y_offset: this.props.y_offset === undefined? 22: this.props.y_offset
+            x_offset: this.props.x_offset === undefined? 10: this.props.x_offset,
+            y_offset: this.props.y_offset === undefined? 30: this.props.y_offset
         };
 
     }
@@ -42,7 +42,7 @@ class node_hierarchy extends component {
             lbls.push(<text key={key++} x={this.x(x) + 15} y={this.y(y)} dy="5" style={{fill:c}} onClick={this.node_click(n.id)}>{n.name}</text>);
         }
         return (
-                <svg className={this.props.className} style={{width:'100%', height:'100%'}} onClick={()=>{ vs.select_node(null);}}>
+                <svg className={this.props.className} style={{width:'100%', height:'99%'}} onClick={()=>{ vs.select_node(null);}}>
                     <defs>
                         <marker id="arrow" viewBox=" 0 0 10 10" markerWidth="5" markerHeight="5" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
                             <path d="M0,0 L0,6 L6,3 z" fill={color} />

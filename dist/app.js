@@ -12,7 +12,7 @@ webpackJsonp([1,2],{
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__style_style_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__style_style_css__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_material_ui_styles_MuiThemeProvider__ = __webpack_require__("./node_modules/material-ui/styles/MuiThemeProvider.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_material_ui_styles_MuiThemeProvider___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_material_ui_styles_MuiThemeProvider__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__component_navigator__ = __webpack_require__("./component/navigator.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__component_navigator__ = __webpack_require__("./component/main.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__provider_toolkit_provider__ = __webpack_require__("./provider/toolkit_provider.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__store_navigation_store__ = __webpack_require__("./store/navigation_store.js");
 //import 'jquery-ui/themes/base/core.css';
@@ -861,9 +861,9 @@ var _temp = function () {
         return;
     }
 
-    __REACT_HOT_LOADER__.register(navigator, 'navigator', 'D:/prjs/_own/jeyjen.design_toolkit/component/navigator.js');
+    __REACT_HOT_LOADER__.register(navigator, 'navigator', 'D:/prjs/_own/jeyjen.design_toolkit/component/main.js');
 
-    __REACT_HOT_LOADER__.register(_default, 'default', 'D:/prjs/_own/jeyjen.design_toolkit/component/navigator.js');
+    __REACT_HOT_LOADER__.register(_default, 'default', 'D:/prjs/_own/jeyjen.design_toolkit/component/main.js');
 }();
 
 ;

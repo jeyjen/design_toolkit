@@ -1,4 +1,5 @@
 import store from '../engine/store';
+import uuid from 'uuid';
 
 
 const default_layouts =
@@ -35,31 +36,45 @@ const default_layouts =
     ]
 }
 
+let def_views = ['dia', 'detail', 'hierarchy'];
+
 class common extends store
 {
     constructor()
     {
         super();
+        this.e =
+        {
+            on_main_window_changed:'on_main_window_changed',
+            on_new_view_added:'on_view_added',
+            on_sel_form_changed: 'on_sel_form_changed'
+        }
+
+        this._titles = new Map();
         this._breakpoints = {lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0};
         this._row_height = 40;
         this._cols = {lg: 20, md: 20, sm: 20, xs: 20, xxs: 20};
         this._margin = [15, 15];
         this._sel_form = null;
         this._layouts = this.get_from_ls('layouts');
-        this._views = ['detail', 'dia', 'hierarchy'];
+        this._views = new Set();
 
-        this.remove_from_ls('layouts');
+        this._titles.set('dia', 'процесс');
+        this._titles.set('detail', 'узел');
+        this._titles.set('hierarchy', 'родители');
+        
+        //this.remove_from_ls('layouts');
         if(this._layouts === null)
         {
             this._layouts = default_layouts;
             this.set_to_ls('layouts', default_layouts);
         }
 
-        this.e =
+        this._layouts.lg.forEach((i)=>
         {
-            on_main_window_changed:'on_main_window_changed',
-            on_sel_form_changed: 'on_sel_form_changed'
-        }
+            this.add_view(i.i);
+        });
+
     }
     select_form(form)
     {
@@ -79,6 +94,12 @@ class common extends store
         this.props.onLayoutChange(layout, layouts);
     }
     //onLayoutChange={this.onLayoutChange}>
+
+    add_view(type)
+    {
+        this._views.add(type);
+        this.emit(this.e.on_new_view_added);
+    }
 
     get_from_ls(key)
     {
