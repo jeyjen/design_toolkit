@@ -27,6 +27,7 @@ class dia extends component {
         let color = this.props.node_color === undefined? '#546E7A': this.props.node_color;
         let els = [];
         let lbls = [];
+        let expands = [];
         let key = 1;
         vs.v_nodes.forEach((v, k, m)=>
         {
@@ -34,7 +35,7 @@ class dia extends component {
             let c = color;
             if(vs.errors.has(v.id))
             {
-                c = '#F44336';
+                c = '#FF6E40';
             }
             if(vs.selected_node_id_1 == v.id)
             {
@@ -44,6 +45,15 @@ class dia extends component {
 
             els.push(<use key={key++} xlinkHref={'#' + v.type} transform="scale(1)" x={this.x(v.x)} y={this.y(v.y)} style={{stroke:c, fill:c}} onDoubleClick={this.node_double_click(v.id)} onClick={this.node_click(v.id)} />);
             lbls.push(<text key={key++} x={this.x(v.x) + 15} y={this.y(v.y)} dy="5" style={{fill:c}} onClick={this.node_click(v.id)}>{v.name}</text>);
+
+            if(v.expand_state == vs.c.expand_state.EXPANDED)
+            {
+                expands.push(<use key={key++} xlinkHref={'#_expanded'} transform="scale(1)" x={this.x(v.x)-20} y={this.y(v.y)} style={{stroke:color, fill:color}} onClick={this.node_collapse.bind(v.id)} />);
+            }
+            else if(v.expand_state == vs.c.expand_state.COLLAPSED)
+            {
+                expands.push(<use key={key++} xlinkHref={'#_collapsed'} transform="scale(1)" x={this.x(v.x)-20} y={this.y(v.y)} style={{stroke:color, fill:color}} onClick={this.node_expand.bind(v.id)}/>);
+            }
         });
 
         let links = vs.refs.map((i)=>
@@ -78,6 +88,15 @@ class dia extends component {
                         <marker id="arrow" viewBox=" 0 0 10 10" markerWidth="5" markerHeight="5" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
                             <path d="M0,0 L0,6 L6,3 z" fill={color} />
                         </marker>
+                        <g id="_collapsed" transform="translate(-12,-12)">
+                            <path d="m 12,9 h -1 v 5 h 1 z" />
+                            <path d="M 14,11 H 9 v 1 h 5 z" />
+                            <circle r="5" cx="11.5" cy="11.5" style={{fillOpacity:".01", strokeWidth:1}}/>
+                        </g>
+                        <g id="_expanded" transform="translate(-12,-12)">
+                            <path d="M 14,11 H 9 v 1 h 5 z" />
+                            <circle r="5" cx="11.5" cy="11.5" style={{fillOpacity:".01", strokeWidth:1}}/>
+                        </g>
                         <g id="_none" transform="translate(-12,-12)">
                             <ellipse cx="12" cy="12" rx="9" ry="9" style={{fillOpacity:".01", strokeWidth:2}}/>
                         </g>
@@ -126,6 +145,7 @@ class dia extends component {
                     {links}
                     {els}
                     {lbls}
+                    {expands}
                 </svg>
         );
     }
@@ -164,6 +184,16 @@ class dia extends component {
             //console.log(this);
             vs.select_node(node_id);
         }.bind(this)
+    }
+
+    node_expand()
+    {
+        vs.expand_node(this);
+    }
+
+    node_collapse()
+    {
+        vs.collapse_node(this);
     }
 }
 export default dia;
