@@ -86,6 +86,7 @@ class navigator extends component {
                     <AppBar
                         title={title}
                         className="drag_area"
+                        style={{backgroundColor: '#546E7A'}}
                         iconElementLeft={icon}
                         iconElementRight={
                         <IconMenu
@@ -110,6 +111,7 @@ class navigator extends component {
             <section>
                 <Toolbar/>
                 <ResponsiveReactGridLayout
+                    style={{marginTop:60}}
                     className="layout"
                     margin={cs._margin}
                     containerPadding={[5,5]}

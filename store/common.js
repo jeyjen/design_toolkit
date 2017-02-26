@@ -52,7 +52,7 @@ class common extends store
 
         this._titles = new Map();
         this._breakpoints = {lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0};
-        this._row_height = 40;
+        this._row_height = 10;
         this._cols = {lg: 20, md: 20, sm: 20, xs: 20, xxs: 20};
         this._margin = [15, 15];
         this._sel_form = null;
