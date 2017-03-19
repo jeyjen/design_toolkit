@@ -14,6 +14,7 @@ import IconView from 'material-ui/svg-icons/content/save';
 
 import component from '../engine/component';
 
+import Icon from './icon';
 import Toolbar from './toolbar';
 import NaviItem from './navi_item';
 import Dia from './form/dia';
@@ -109,6 +110,7 @@ class navigator extends component {
         });
         return (
             <section>
+                <Icon/>
                 <Toolbar/>
                 <ResponsiveReactGridLayout
                     style={{marginTop:60}}
