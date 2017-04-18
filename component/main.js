@@ -14,6 +14,7 @@ import IconView from 'material-ui/svg-icons/content/save';
 
 import component from '../engine/component';
 
+import Icon from './icon';
 import Toolbar from './toolbar';
 import NaviItem from './navi_item';
 import Dia from './form/dia';
@@ -86,6 +87,7 @@ class navigator extends component {
                     <AppBar
                         title={title}
                         className="drag_area"
+                        style={{backgroundColor: '#546E7A'}}
                         iconElementLeft={icon}
                         iconElementRight={
                         <IconMenu
@@ -108,8 +110,10 @@ class navigator extends component {
         });
         return (
             <section>
+                <Icon/>
                 <Toolbar/>
                 <ResponsiveReactGridLayout
+                    style={{marginTop:60}}
                     className="layout"
                     margin={cs._margin}
                     containerPadding={[5,5]}

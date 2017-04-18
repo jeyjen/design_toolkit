@@ -69,6 +69,12 @@ class view_store extends EventEmitter
                 AND: 8,
                 OR: 9,
                 PROCESS: 10
+            },
+            expand_state:
+            {
+                NOTHING: 0,
+                EXPANDED:1,
+                COLLAPSED:2
             }
         };
 
@@ -82,7 +88,7 @@ class view_store extends EventEmitter
         this.previous = new Map();
         this.v_nodes = new Map();
         this.refs = [];
-        this.collapsed_nodes = new Map();
+        this._expanded = new Set();
         this.types = new Map();
         this.selected_node_id_1 = null;
         this.types = new Map();
@@ -152,15 +158,10 @@ class view_store extends EventEmitter
                 stack.push(n.next);
                 level_stack.push(x);
             }
-            let expand_state = 0;// none, open, close
+            let expand_state = this.c.expand_state.NOTHING;// none, open, close
             if(n.children.length > 0)
             {
-                if(this.collapsed_nodes.has(n['id']))
-                {
-                    // отображать закрытой со значком +
-                    expand_state = 2;
-                }
-                else
+                if(this._expanded.has(n['id']))
                 {
                     // отображается открытым со значком -
                     for(let i = n.children.length - 1; i >= 0; i--)
@@ -168,13 +169,14 @@ class view_store extends EventEmitter
                         stack.push(n.children[i]);
                         level_stack.push(x + 1);
                     }
-                    expand_state = 1;
+
+                    expand_state = this.c.expand_state.EXPANDED;
                 }
-            }
-            else
-            {
-                // отображается без значка раскрытия
-                expand_state = 0;
+                else
+                {
+                    // отображать закрытой со значком +
+                    expand_state = this.c.expand_state.COLLAPSED;
+                }
             }
             v_node.expand_state = expand_state;
             this.v_nodes.set(v_node.id, v_node);
@@ -397,14 +399,14 @@ class view_store extends EventEmitter
 
         this.v_nodes.forEach((v, k, m)=>
         {
-            if(v.children.length > 0)
+            v.children.forEach((i)=>
             {
-                v.children.forEach((i)=>
+                if(this.v_nodes.has(i))
                 {
                     let ch = this.v_nodes.get(i);
                     this.refs.push({x1:v.x, y1:v.y, x2:ch.x, y2: ch.y});
-                });
-            }
+                }
+            });
 
             if(v.next !== "" && this.v_nodes.has(v.next))
             {
@@ -682,6 +684,16 @@ class view_store extends EventEmitter
     scale_to_node(node_id)
     {
         this.root = node_id;
+        this._define_visual_struct();
+    }
+    expand_node(node_id)
+    {
+        this._expanded.add(node_id);
+        this._define_visual_struct();
+    }
+    collapse_node(node_id)
+    {
+        this._expanded.delete(node_id);
         this._define_visual_struct();
     }
 }

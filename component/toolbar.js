@@ -86,7 +86,7 @@ class toolbar extends component {
 
     render() {
         return (
-            <Toolbar>
+            <Toolbar style={{position:'fixed', top:0, left:0, width:'100%', zIndex:999}}>
                 <ToolbarGroup firstChild={true}>
                     <FlatButton
                         onTouchTap={this.handleTouchTap}
