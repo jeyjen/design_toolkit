@@ -2,7 +2,7 @@ import React from 'react';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import component from '../engine/component';
 import Icon from './icon';
-import Dia from './form/dia';
+import Dia from '../app/dia/dia';
 
 injectTapEventPlugin();
 class main extends component {

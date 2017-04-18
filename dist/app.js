@@ -92,7 +92,7 @@ var _temp = function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__control_sect__ = __webpack_require__("./control/sect.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_material_ui_Paper__ = __webpack_require__("./node_modules/material-ui/Paper/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_material_ui_Paper___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10_material_ui_Paper__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__store_view_store__ = __webpack_require__("./store/view_store.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__store_view_store__ = __webpack_require__("./store/state_visual.js");
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -423,7 +423,7 @@ var _temp = function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__("./node_modules/react/react.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__engine_component__ = __webpack_require__("./engine/component.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__store_view_store__ = __webpack_require__("./store/view_store.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__store_view_store__ = __webpack_require__("./store/state_visual.js");
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -17992,11 +17992,11 @@ var _temp = function () {
         return;
     }
 
-    __REACT_HOT_LOADER__.register(fake_data, 'fake_data', 'D:/prjs/_own/jeyjen.design_toolkit/store/view_store.js');
+    __REACT_HOT_LOADER__.register(fake_data, 'fake_data', 'D:/prjs/_own/jeyjen.design_toolkit/store/state_visual.js');
 
-    __REACT_HOT_LOADER__.register(view_store, 'view_store', 'D:/prjs/_own/jeyjen.design_toolkit/store/view_store.js');
+    __REACT_HOT_LOADER__.register(view_store, 'view_store', 'D:/prjs/_own/jeyjen.design_toolkit/store/state_visual.js');
 
-    __REACT_HOT_LOADER__.register(_default, 'default', 'D:/prjs/_own/jeyjen.design_toolkit/store/view_store.js');
+    __REACT_HOT_LOADER__.register(_default, 'default', 'D:/prjs/_own/jeyjen.design_toolkit/store/state_visual.js');
 }();
 
 ;

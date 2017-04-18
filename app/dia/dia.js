@@ -1,6 +1,6 @@
 import React from 'react';
 import component from '../../engine/component';
-import vs from '../view_store';
+import vs from './state_visual';
 
 class dia extends component {
     constructor(props) {
@@ -44,7 +44,14 @@ class dia extends component {
 
 
             els.push(<use key={key++} xlinkHref={'#' + v.type} transform="scale(1)" x={this.x(v.x)} y={this.y(v.y)} style={{stroke:c, fill:c}} onDoubleClick={this.node_double_click(v.id)} onClick={this.node_click(v.id)} />);
-            lbls.push(<text key={key++} x={this.x(v.x) + 25} y={this.y(v.y) + 12} dy="5" style={{fill:c}} onClick={this.node_click(v.id)}>{v.name}</text>);
+
+            //<div
+            //contentEditable={true}
+            //style={{position:'relative', display:'block', marginLeft:5, outline: 'none', wordWrap: 'break-word'}}>
+            //{v.name}
+            //</div>
+            lbls.push(<foreignObject x={this.x(v.x) + 25} y={this.y(v.y)} width={100}><div>{v.name}</div></foreignObject>);//<div >hello</div>
+            //lbls.push(<text key={key++} x={this.x(v.x) + 25} y={this.y(v.y) + 12} dy="5" style={{fill:c}} onClick={this.node_click(v.id)}>{v.name}</text>);
 
             if(v.expand_state == vs.c.expand_state.EXPANDED)
             {
@@ -83,7 +90,7 @@ class dia extends component {
         })
 
         return (
-            <svg className={this.props.className} style={{width:'100%', height:400}} onClick={()=>{ vs.select_node(null);}}>
+            <svg className={this.props.className} style={{width:'100%', height:600}} onClick={()=>{ vs.select_node(null);}}>
                 <defs>
                     <marker id="arrow" viewBox=" 0 0 10 10" markerWidth="5" markerHeight="5" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
                         <path d="M0,0 L0,6 L6,3 z" fill={color} />
