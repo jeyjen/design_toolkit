@@ -1,6 +1,6 @@
 import React from 'react';
 import component from '../../engine/component';
-import vs from '../../store/view_store';
+import vs from '../view_store';
 
 class node_hierarchy extends component {
     constructor(props) {
