@@ -1,6 +1,6 @@
 import React from 'react';
 import component from '../../engine/component';
-import vs from '../../app/dia/state_visual';
+import vs from '../dia/store';
 
 class node_hierarchy extends component {
     constructor(props) {

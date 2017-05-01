@@ -116,6 +116,17 @@ class view_store extends EventEmitter
         this._define_visual_struct();
     }
 
+    set project(id){
+        if(this._prjs.has(id)){
+            this._sel_prj = id;
+            let prj = this._prjs.get(id);
+            this.role = prj.root_role_id;
+        }
+    }
+    get project(){
+        return this._sel_prj;
+    }
+
     /*
     * определяет всю структуру по списку nodes
     * */

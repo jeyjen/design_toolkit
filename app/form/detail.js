@@ -10,7 +10,7 @@ import IconRight from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
 import IconButton from 'material-ui/IconButton';
 
 
-import vs from '../../app/dia/state_visual';
+import vs from '../dia/store';
 
 class detail extends component {
     constructor(props) {

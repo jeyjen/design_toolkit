@@ -1,6 +1,6 @@
 import React from 'react';
 import component from '../../engine/component';
-import vs from './state_visual';
+import vs from './store';
 
 class dia extends component {
     constructor(props) {

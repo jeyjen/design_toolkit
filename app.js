@@ -3,7 +3,7 @@ import 'react-resizable/css/styles.css';
 import './style/common.css';
 import './style/style.css';
 import React from 'react';
-import Main from './component/main';
+import Main from './app/main';
 
 const App = () => (
     <Main/>
