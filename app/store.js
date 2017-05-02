@@ -7,7 +7,7 @@ projects.push(
     {id:'p1', name: 'prj1', title: 'some title', root_role_id: 'r1'});
 
 let roles = [
-    {id: 'r1', name: 'role1', root_node_id: '0'}
+    {id: 'r1', name: 'role1', project_id: 'p1', root_node_id: '0'}
 ];
 
 let nodes =
@@ -66,23 +66,89 @@ class base_store extends EventEmitter
         this._sel_prj = null;
         this._sel_role = null;
         this._sel_node = null;
-    }
 
+        this._parent = new Map();
+        this._previous = new Map();
+    }
+    _define_inharitance_refs()
+    {
+        this._parent.clear();
+        this._previous.clear();
+
+        this._nodes.forEach((v, k, m)=>
+        {
+            if(v.next !== "")
+            {
+                this._previous.set(v.next, v.id);
+            }
+            for(let i = 0; i < v.children.length; i++)
+            {
+                this._parent.set(v.children[i], v.id);
+            }
+        });
+    }
     set projects(list_of_projects){
+        this._prjs.clear();
         list_of_projects.forEach((p)=>{
             this._prjs.set(p.id, p);
         });
     }
+    get projects(){
+        return this._prjs;
+    }
     set roles(list_of_roles){
+        this._roles.clear();
         list_of_roles.forEach((r)=>{
             this._roles.set(r.id, r);
         });
     }
+    get roles(){
+        return this._roles;
+    }
     set nodes(list_of_nodes){
+        this._nodes.clear();
         list_of_nodes.forEach((n)=>{
             this._nodes.set(n.id, n);
         });
+        this._define_inharitance_refs();
     }
+    get nodes(){
+        return this._nodes;
+    }
+    set project(id){
+        if(this._prjs.has(id)){
+            this._sel_prj = id;
+            let prj = this._prjs.get(id);
+            this.role = prj.root_role_id;
+        }
+    }
+    get project(){
+        return this._sel_prj;
+    }
+    set role(id){
+        if(this._roles.has(id)){
+            let role = this._roles.get(id);
+            if(role.project_id !== this._sel_prj){
+                this.node = role.root_node_id;
+            }
+        }
+    }
+    get node(){
+        return this._sel_node;
+    }
+    set node(id){
+        if(this._nodes.has(id)){
+            this._sel_node = id;
+            // todo реализовать смену роли и проекта если установлен узел отличный от текущих
+        }
+    }
+    // методы управления
+    put_project(){}
+    delete_project(){}
+    put_role(){}
+    delete_role(){}
+    put_node(){}
+    delete_node(){}
 }
 
 
