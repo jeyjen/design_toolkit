@@ -1,102 +1,83 @@
-'use strict';
+var path = require('path')
+var webpack = require('webpack')
 
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-var webpack = require('webpack');
-var path = require('path');
-var fs = require('fs');
-
-// упаковка сторонних библиотек в единный файл
-var contents = fs.readFileSync('./package.json', 'utf8');
-var pack = JSON.parse(contents);
-var libs = [];
-for (var prop in pack.dependencies) 
-{
-    libs.push(prop);
+module.exports = {
+  entry: './app/app.js',
+  output: {
+    path: path.resolve(__dirname, './dist'),
+    publicPath: '/dist/',
+    filename: 'build.js'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader',
+        options: {
+          loaders: {
+            // Since sass-loader (weirdly) has SCSS as its default parse mode, we map
+            // the "scss" and "sass" values for the lang attribute to the right configs here.
+            // other preprocessors should work out of the box, no loader config like this necessary.
+            'scss': 'vue-style-loader!css-loader!sass-loader',
+            'sass': 'vue-style-loader!css-loader!sass-loader?indentedSyntax'
+          }
+          // other vue-loader options go here
+        }
+      },
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/
+      },
+      {
+        test: /\.(png|jpg|gif|svg)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[name].[ext]?[hash]'
+        }
+      }
+    ]
+  },
+  resolve: {
+    alias: {
+      'vue$': 'vue/dist/vue.esm.js'
+    }
+  },
+  devServer: {
+    historyApiFallback: true,
+    noInfo: true,
+    port: 10000
+  },
+  performance: {
+    hints: false
+  },
+  devtool: '#eval-source-map',
+  plugins:[
+      new webpack.ProvidePlugin({
+          _: "lodash",
+          Promise: 'bluebird',
+          'window.Promise': 'bluebird'
+      })
+  ]
 }
 
-module.exports = function() {	
-	
-	return {
-        entry: {
-            app: ['react-hot-loader/patch', 'webpack-dev-server/client?http://localhost:10001', 'webpack/hot/only-dev-server', './index.js'],
-			lib: libs
-        },
-		resolve: 
-		{
-			modules: 
-			[
-				__dirname,
-				"node_modules"
-			]
-		},
-		module:
-		{
-			rules: 
-			[
-				{
-					test: /\.js$/,
-					use: [
-					  'babel-loader',
-					],
-					exclude: /node_modules/
-				},
-				{
-					test: /.css$/,
-					loader: ExtractTextPlugin.extract({
-						fallbackLoader: "style-loader",
-						loader: "css-loader"//,
-						//publicPath: "/"
-					})
-				},
-				{
-					test:/\.(png|jpg|svg|ttf|eot|woff|woff2|gif)$/,
-					loader: 'file-loader?name=[path][name].[ext]?hash=[hash:7]'
-				}
-				
-			]
-		},
-        output: {
-            filename: '[name].js?hash=[hash:7]',
-            path: path.resolve(__dirname, 'dist')//,
-			//publicPath: '/'
-        },
-		context: __dirname,
-		devtool: 'inline-source-map',
-		devServer: 
-		{
-			hot: true,
-			// enable HMR on the server
-
-			contentBase: path.resolve(__dirname, 'dist'),
-			// match the output path
-
-			publicPath: '/',
-			// match the output `publicPath`,
-			port:10000
-		},
-        plugins: 
-		[
-            new webpack.optimize.CommonsChunkPlugin({
-                names: ['lib', 'manifest'] // manifest - указывает на необходимость сборки всех перечисленных библиотек в единный файл				
-            }),
-			new ExtractTextPlugin({
-    			filename: "bundle.css?hash=[contenthash]",
-    			disable: false,
-    			allChunks: true
-  			}),
-			
-			new HtmlWebpackPlugin({
-				title: pack.name,
-				filename: './index.html',
-				template:'template.html',
-				inject: 'body',
-			chunks: ['manifest','lib','app'],}),
-			new webpack.HotModuleReplacementPlugin(),
-			// enable HMR globally
-
-			new webpack.NamedModulesPlugin()
-			// prints more readable module names in the browser console on HMR updates
-        ]
-    };
+if (process.env.NODE_ENV === 'production') {
+  module.exports.devtool = '#source-map'
+  // http://vue-loader.vuejs.org/en/workflow/production.html
+  module.exports.plugins = (module.exports.plugins || []).concat([
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"production"'
+      }
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      sourceMap: true,
+      compress: {
+        warnings: false
+      }
+    }),
+    new webpack.LoaderOptionsPlugin({
+      minimize: true
+    })
+  ])
 }
