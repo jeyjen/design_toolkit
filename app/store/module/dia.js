@@ -63,22 +63,7 @@ let define_rel_node_role = (state)=>{
     node_role = {};
     for(let key in state.roles){
         let role = state.roles[key];
-        let stack = [];
-        stack.push(role.root_node_id);
-        while (stack.length > 0)
-        {
-            let node = state.nodes[stack.pop()];
-            node_role[node.id] = role.id;
-            if (node.id !== state.root_node && node.next !== ""){
-                stack.push(node.next);
-            }
-            if(node.contains.length > 0){
-                for(let i = node.contains.length - 1; i >= 0; i--)
-                {
-                    stack.push(node.contains[i]);
-                }
-            }
-        }
+        node_role[role.root_node_id] = role.id;
     }
 }
 
@@ -117,7 +102,11 @@ const getters = {
 
         // для роли сохранить список y координат для отображения
         // по роли определить корневой узел
+        // сохранить порядок появления ролей
+        //
 
+        let v_role_coors = {};
+        let v_role_order = [];
 
         let v_nodes = [];
         if(state.root_node === "")
@@ -126,38 +115,50 @@ const getters = {
         let stack = [];
         let level_stack = [];
 
-        let x = 1;
-        let y = 0;
+        let x = 0;
+        let y = 1;
         stack.push(state.root_node);
-        level_stack.push(x);
+        level_stack.push(y);
 
 
         while (stack.length > 0)
         {
             let v_node = {};
             let n = state.nodes[stack.pop()];
-            let x = level_stack.pop();
-            y += 1;
+            let y = level_stack.pop();
+            x += 1;
             v_node.id = n.id;
             v_node.type = type[n.type];
             v_node.code = n.code;
             v_node.x = x;
             v_node.y = y;
 
-
             if (n.id !== state.root_node && n.next !== "")
             {
                 stack.push(n.next);
-                level_stack.push(x);
+                level_stack.push(y);
             }
             let expand_state = expand.none;// none, open, close
             if(n.contains.length > 0){
                 if(n['id'] in state.expanded){
                     // отображается открытым со значком -
-                    for(let i = n.contains.length - 1; i >= 0; i--)
-                    {
-                        stack.push(n.contains[i]);
-                        level_stack.push(x + 1);
+                    if(n.type === 6 || n.type === 7 ){
+                        debugger;
+                        let nnn = n.contains[0];
+                        let role_id = node_role[nnn];
+                        if(role_id in v_role_coors){
+                            v_role_coors[role_id].push(x);
+                        }
+                        else{
+                            v_role_coors[role_id] = [x];
+                            v_role_order.push(role_id);
+                        }
+                    }
+                    else{
+                        for(let i = n.contains.length - 1; i >= 0; i--){
+                            stack.push(n.contains[i]);
+                            level_stack.push(y + 1);
+                        }
                     }
                     expand_state = expand.open;
                 }
@@ -170,7 +171,27 @@ const getters = {
             v_node.expand_state = expand_state;
             v_nodes.push(v_node);
         }
+
+        y = 10;
         debugger;
+        for(let i = 0; i < v_role_order.length; i++){
+            let role_id = v_role_order[i];
+            let node_id = state.roles[role_id].root_node_id;
+            let n = state.nodes[node_id];
+
+            let x_coor = v_role_coors[role_id];
+            for(let j = 0; j < x_coor.length; j++){
+                x = x_coor[j];
+                let v_node = {};
+                v_node.id = n.id;
+                v_node.type = type[n.type];
+                v_node.code = n.code;
+                v_node.x = x;
+                v_node.y = y;
+                v_nodes.push(v_node);
+            }
+        }
+
         return v_nodes;
     }
 }

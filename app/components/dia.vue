@@ -63,9 +63,9 @@
             </symbol>
         </svg>
 
-        <svg style="width: 700px; height: 500px">
-            <use v-for="i in items" :href="'#' + i.type" transform="scale(1)" :x="i.x - 25" :y="i.y - 18"></use>
-            <text v-for="i in items" :x="i.x" :y="i.y" font-family="Verdana" font-size="20">
+        <svg style="width: 800px; height: 800px">
+            <use v-for="i in items" :href="'#' + i.type" transform="scale(1)" :x="i.x" :y="i.y"></use>
+            <text v-for="i in items" :x="i.x + 5" :y="i.y - 3" font-family="Verdana" font-size="10">
                 {{i.code}}
             </text>
         </svg>
@@ -79,8 +79,8 @@
             items(){
                 let g = this.$store.getters.graph;
                 g.forEach(function(i){
-                    i.x = i.x * 20;
-                    i.y = i.y * 20;
+                    i.x = i.x * 40;
+                    i.y = i.y * 30;
                 });
                 return  g;
             }

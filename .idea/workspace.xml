@@ -31,8 +31,8 @@
       <file leaf-file-name="dia.vue" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/components/dia.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="638">
-              <caret line="90" column="55" lean-forward="false" selection-start-line="90" selection-start-column="55" selection-end-line="90" selection-end-column="55" />
+            <state relative-caret-position="32">
+              <caret line="65" column="45" lean-forward="false" selection-start-line="65" selection-start-column="45" selection-end-line="65" selection-end-column="45" />
               <folding>
                 <element signature="n#svg#0;n#div#0;n#template#0;n#!!top" expanded="false" />
                 <element signature="n#style#0;n#circle#0;n#symbol#2;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
@@ -48,7 +48,6 @@
                 <element signature="n#style#0;n#ellipse#0;n#symbol#12;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#ellipse#0;n#symbol#13;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#ellipse#0;n#symbol#14;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#svg#1;n#div#0;n#template#0;n#!!top" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -57,7 +56,7 @@
       <file leaf-file-name="product.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/store/module/product.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="528">
+            <state relative-caret-position="394">
               <caret line="27" column="4" lean-forward="false" selection-start-line="27" selection-start-column="7" selection-end-line="37" selection-end-column="8" />
               <folding />
             </state>
@@ -67,8 +66,8 @@
       <file leaf-file-name="dia.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/store/module/dia.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="526">
-              <caret line="145" column="0" lean-forward="true" selection-start-line="145" selection-start-column="0" selection-end-line="145" selection-end-column="0" />
+            <state relative-caret-position="702">
+              <caret line="174" column="14" lean-forward="false" selection-start-line="174" selection-start-column="14" selection-end-line="174" selection-end-column="14" />
               <folding>
                 <element signature="e#310#373#0" expanded="false" />
                 <element signature="e#1003#1098#0" expanded="false" />
@@ -127,8 +126,8 @@
       <file leaf-file-name="data.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/data.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="682">
-              <caret line="31" column="66" lean-forward="false" selection-start-line="31" selection-start-column="66" selection-end-line="31" selection-end-column="66" />
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -171,10 +170,10 @@
         <option value="$PROJECT_DIR$/app/store/index.js" />
         <option value="$PROJECT_DIR$/app/name.js" />
         <option value="$PROJECT_DIR$/app/store/module/product.js" />
-        <option value="$PROJECT_DIR$/app/components/dia.vue" />
         <option value="$PROJECT_DIR$/app/app.js" />
         <option value="$PROJECT_DIR$/app/store/module/cart.js" />
         <option value="$PROJECT_DIR$/app/data.js" />
+        <option value="$PROJECT_DIR$/app/components/dia.vue" />
         <option value="$PROJECT_DIR$/app/store/module/dia.js" />
       </list>
     </option>
@@ -420,12 +419,12 @@
       <workItem from="1495293403182" duration="11939000" />
       <workItem from="1495461751144" duration="9190000" />
       <workItem from="1496147027210" duration="9341000" />
-      <workItem from="1496549593410" duration="1182000" />
+      <workItem from="1496549593410" duration="4913000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="52128000" />
+    <option name="totallyTimeSpent" value="55859000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="69" y="-9" width="1860" height="1092" extended-state="0" />
@@ -504,7 +503,6 @@
             <element signature="n#style#0;n#ellipse#0;n#symbol#12;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#ellipse#0;n#symbol#13;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#ellipse#0;n#symbol#14;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#svg#1;n#div#0;n#template#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -598,7 +596,6 @@
             <element signature="n#style#0;n#ellipse#0;n#symbol#12;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#ellipse#0;n#symbol#13;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#ellipse#0;n#symbol#14;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#svg#1;n#div#0;n#template#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -793,43 +790,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/store/module/product.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="528">
-          <caret line="27" column="4" lean-forward="false" selection-start-line="27" selection-start-column="7" selection-end-line="37" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/name.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="176">
           <caret line="8" column="14" lean-forward="false" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="14" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/components/dia.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="638">
-          <caret line="90" column="55" lean-forward="false" selection-start-line="90" selection-start-column="55" selection-end-line="90" selection-end-column="55" />
-          <folding>
-            <element signature="n#svg#0;n#div#0;n#template#0;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#circle#0;n#symbol#2;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#circle#0;n#symbol#3;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#ellipse#0;n#symbol#4;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#ellipse#0;n#symbol#5;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#ellipse#0;n#symbol#6;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#ellipse#0;n#symbol#7;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#ellipse#0;n#symbol#8;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#ellipse#0;n#symbol#9;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#ellipse#0;n#symbol#10;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#ellipse#0;n#symbol#11;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#ellipse#0;n#symbol#12;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#ellipse#0;n#symbol#13;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#ellipse#0;n#symbol#14;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#svg#1;n#div#0;n#template#0;n#!!top" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -853,18 +818,49 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/store/module/product.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="394">
+          <caret line="27" column="4" lean-forward="false" selection-start-line="27" selection-start-column="7" selection-end-line="37" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/data.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="682">
-          <caret line="31" column="66" lean-forward="false" selection-start-line="31" selection-start-column="66" selection-end-line="31" selection-end-column="66" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/components/dia.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="32">
+          <caret line="65" column="45" lean-forward="false" selection-start-line="65" selection-start-column="45" selection-end-line="65" selection-end-column="45" />
+          <folding>
+            <element signature="n#svg#0;n#div#0;n#template#0;n#!!top" expanded="false" />
+            <element signature="n#style#0;n#circle#0;n#symbol#2;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#circle#0;n#symbol#3;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#ellipse#0;n#symbol#4;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#ellipse#0;n#symbol#5;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#ellipse#0;n#symbol#6;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#ellipse#0;n#symbol#7;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#ellipse#0;n#symbol#8;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#ellipse#0;n#symbol#9;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#ellipse#0;n#symbol#10;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#ellipse#0;n#symbol#11;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#ellipse#0;n#symbol#12;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#ellipse#0;n#symbol#13;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#ellipse#0;n#symbol#14;n#svg#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/store/module/dia.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="526">
-          <caret line="145" column="0" lean-forward="true" selection-start-line="145" selection-start-column="0" selection-end-line="145" selection-end-column="0" />
+        <state relative-caret-position="702">
+          <caret line="174" column="14" lean-forward="false" selection-start-line="174" selection-start-column="14" selection-end-line="174" selection-end-column="14" />
           <folding>
             <element signature="e#310#373#0" expanded="false" />
             <element signature="e#1003#1098#0" expanded="false" />
