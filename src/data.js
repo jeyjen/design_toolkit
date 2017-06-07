@@ -1,10 +1,10 @@
 export default {
     id: 'proj_01',
     title: 'проект 1',
-    root_role_id : 'r_01',
-    roles: [
-        { id: 'r_01', name: 'n_r_01', title: 'role 01', root_node_id: 'n_00', parent_role: ''},
-        { id: 'r_02', name: 'n_r_02', title: 'role 02', root_node_id: 'n_23', parent_role: ''}
+    root_character_id : 'r_01',
+    characters: [
+        { id: 'r_01', name: 'n_r_01', title: 'role 01', root_node_id: 'n_00'},
+        { id: 'r_02', name: 'n_r_02', title: 'role 02', root_node_id: 'n_23'}
     ],
     nodes: [
         // root operation

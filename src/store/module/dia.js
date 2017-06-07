@@ -49,10 +49,10 @@ expanded['n_22'] = true;
 
 // initial state
 const state = {
-    root_role: "",
+    root_character: "",
     root_node: "",
     nodes: {},
-    roles: {},
+    characters: {},
     expanded: expanded,
 };
 
@@ -61,25 +61,25 @@ let node_role = null;
 
 let define_rel_node_role = (state)=>{
     node_role = {};
-    for(let key in state.roles){
-        let role = state.roles[key];
-        node_role[role.root_node_id] = role.id;
+    for(let key in state.characters){
+        let character = state.characters[key];
+        node_role[character.root_node_id] = character.id;
     }
 }
 
 const mutations = {
     [m.project.put] (state, prj) {
-        prj.roles.forEach((i)=>{
-            state.roles[i.id] = i;
+        prj.characters.forEach((i)=>{
+            state.characters[i.id] = i;
         });
         prj.nodes.forEach((i)=>{
             state.nodes[i.id] = i;
         });
-        if(! prj.root_role_id in state.roles ){
-            throw 'не существует роли с id ' + prj.root_role_id;
+        if(! prj.root_character_id in state.characters ){
+            throw 'не существует роли с id ' + prj.root_character_id;
         }
-        state.root_role = prj.root_role_id;
-        let r = state.roles[prj.root_role_id];
+        state.root_character = prj.root_character_id;
+        let r = state.characters[prj.root_character_id];
 
         if(! r.root_node_id in state.nodes){
             throw 'не существует узла с id ' + prj.root_node_id;
@@ -88,29 +88,31 @@ const mutations = {
 
         // определить отношение между узлом и ролью
         define_rel_node_role(state);
-
-
-        // вычислить родителей
-        // вычилить иерархию ролей
-        // вычислить роль по id узла
     }
+}
+
+let prepare_result = (nodes, characters)=>{
+   return {
+       nodes,
+       characters
+   }
 }
 
 // getters
 const getters = {
     graph(state){
 
-        // для роли сохранить список y координат для отображения
-        // по роли определить корневой узел
-        // сохранить порядок появления ролей
-        //
+        let links = [];
 
-        let v_role_coors = {};
-        let v_role_order = [];
+        let v_character_x = {};
+        let v_character_order = [state.root_character];
+        let v_character_y = {};
+        let max_y = 0;
 
         let v_nodes = [];
+        let v_nodes_map = [];
         if(state.root_node === "")
-            return v_nodes;
+            return prepare_result([], []);
 
         let stack = [];
         let level_stack = [];
@@ -119,7 +121,6 @@ const getters = {
         let y = 1;
         stack.push(state.root_node);
         level_stack.push(y);
-
 
         while (stack.length > 0)
         {
@@ -133,33 +134,41 @@ const getters = {
             v_node.x = x;
             v_node.y = y;
 
-            if (n.id !== state.root_node && n.next !== "")
-            {
+            if (n.id !== state.root_node && n.next !== ""){
                 stack.push(n.next);
                 level_stack.push(y);
+
+                links.push({from:n.id, to: stack[stack.length - 1]}); // LINK
             }
+
+
             let expand_state = expand.none;// none, open, close
             if(n.contains.length > 0){
                 if(n['id'] in state.expanded){
                     // отображается открытым со значком -
                     if(n.type === 6 || n.type === 7 ){
-                        debugger;
-                        let nnn = n.contains[0];
-                        let role_id = node_role[nnn];
-                        if(role_id in v_role_coors){
-                            v_role_coors[role_id].push(x);
+                        let character_id = node_role[n.contains[0]];
+                        if(character_id in v_character_x){
+                            v_character_x[character_id].push(x);
                         }
                         else{
-                            v_role_coors[role_id] = [x];
-                            v_role_order.push(role_id);
+                            v_character_x[character_id] = [x];
+                            v_character_order.push(character_id);
                         }
                     }
                     else{
+                        if(max_y < y){
+                          max_y = y;
+                        }
                         for(let i = n.contains.length - 1; i >= 0; i--){
                             stack.push(n.contains[i]);
                             level_stack.push(y + 1);
                         }
                     }
+                    for(let i = n.contains.length - 1; i >= 0; i--){ // LINK
+                        links.push({from:n.id, to: n.contains[i]});
+                    }
+
                     expand_state = expand.open;
                 }
                 else
@@ -170,16 +179,18 @@ const getters = {
             }
             v_node.expand_state = expand_state;
             v_nodes.push(v_node);
+            v_nodes_map[v_node.id] = v_node;
         }
 
-        y = 10;
-        debugger;
-        for(let i = 0; i < v_role_order.length; i++){
-            let role_id = v_role_order[i];
-            let node_id = state.roles[role_id].root_node_id;
+        let character_y = max_y + 3;
+        for(let i = 1; i < v_character_order.length; i++){
+            let character_id = v_character_order[i];
+            let node_id = state.characters[character_id].root_node_id;
             let n = state.nodes[node_id];
 
-            let x_coor = v_role_coors[role_id];
+            v_character_y[character_id] = character_y;
+
+            let x_coor = v_character_x[character_id];
             for(let j = 0; j < x_coor.length; j++){
                 x = x_coor[j];
                 let v_node = {};
@@ -187,12 +198,31 @@ const getters = {
                 v_node.type = type[n.type];
                 v_node.code = n.code;
                 v_node.x = x;
-                v_node.y = y;
+                v_node.y = character_y;
                 v_nodes.push(v_node);
             }
+            character_y += 1;
         }
 
-        return v_nodes;
+        // отобразить названия персонажей
+        v_character_y[state.root_character] = 1;
+
+        let characters = [];
+        for(let i = 0; i < v_character_order.length; i++){
+            let character_id = v_character_order[i];
+            let character = state.characters[character_id];
+            let v_character = {};
+            v_character.id = character.id;
+            v_character.name = character.name;
+            v_character.x = 0;
+            v_character.y = v_character_y[character_id];
+            characters.push(v_character);
+        }
+
+        // вычислить пути для стрелок
+
+
+        return prepare_result(v_nodes, characters);
     }
 }
 // actions
