@@ -64,6 +64,14 @@
         </svg>
 
         <svg style="width: 800px; height: 800px">
+          <defs>
+            <marker id="arrow" viewBox=" 0 0 10 10" markerWidth="5" markerHeight="5" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L0,6 L6,3 z" fill="red" />
+            </marker>
+          </defs>
+
+           <path v-for="path in links" :d="path" marker-end="url(#arrow)" stroke-width="1" stroke="black"></path>
+
             <use v-for="i in nodes" :href="'#' + i.type" transform="scale(1)" :x="i.x" :y="i.y"></use>
             <text v-for="i in nodes" :x="i.x + 5" :y="i.y - 3" font-family="Verdana" font-size="10">
                 {{i.code}}
@@ -84,7 +92,7 @@
                 let g = this.$store.getters.graph.nodes;
                 g.forEach(function(i){
                     i.x = i.x * 40;
-                    i.y = i.y * 30;
+                    i.y = i.y * 40;
                 });
                 return  g;
             },
@@ -92,9 +100,12 @@
               let g = this.$store.getters.graph.characters;
               g.forEach(function(i){
                 i.x = 0;
-                i.y = i.y * 30;
+                i.y = i.y * 40;
               });
               return  g;
+            },
+            links(){
+              return this.$store.getters.graph.links;
             }
         },
         methods: {

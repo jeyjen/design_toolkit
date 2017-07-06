@@ -23,7 +23,7 @@ export default {
         { id:'n_08', code:'op_08', type: 1, next: '', contains: [], title: 'op 8', description: '' },
         { id:'n_09', code:'op_09', type: 1, next: '', contains: [], title: 'op 9', description: '' },
         // while
-        { id:'n_10', code:'w_10', type: 5, next: 'n_13', contains: ['n_11', 'n_12'], title: 'while 10', description: '' },
+        { id:'n_10', code:'w_10', type: 5, next: 'n_13', contains: ['n_11'], title: 'while 10', description: '' },
         { id:'n_11', code:'op_11', type: 1, next: 'n_12', contains: [], title: 'op 11', description: '' },
         { id:'n_12', code:'op_12', type: 1, next: '', contains: [], title: 'op 12', description: '' },
         // cmd

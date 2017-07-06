@@ -91,10 +91,11 @@ const mutations = {
     }
 }
 
-let prepare_result = (nodes, characters)=>{
+let prepare_result = (nodes, characters, links)=>{
    return {
        nodes,
-       characters
+       characters,
+       links
    }
 }
 
@@ -110,7 +111,7 @@ const getters = {
         let max_y = 0;
 
         let v_nodes = [];
-        let v_nodes_map = [];
+        let v_nodes_map = {};
         if(state.root_node === "")
             return prepare_result([], []);
 
@@ -122,8 +123,7 @@ const getters = {
         stack.push(state.root_node);
         level_stack.push(y);
 
-        while (stack.length > 0)
-        {
+        while (stack.length > 0){
             let v_node = {};
             let n = state.nodes[stack.pop()];
             let y = level_stack.pop();
@@ -137,10 +137,24 @@ const getters = {
             if (n.id !== state.root_node && n.next !== ""){
                 stack.push(n.next);
                 level_stack.push(y);
-
-                links.push({from:n.id, to: stack[stack.length - 1]}); // LINK
             }
 
+            // LINK
+            if(n.contains.length > 0 && n.id in state.expanded){
+              for(let i = n.contains.length - 1; i >= 0; i--){ // LINK
+                links.push({from:n.id, to: n.contains[i]});
+              }
+            }
+            else if(n.next !== ""){
+              links.push({from:n.id, to: n.next});
+            }
+            else if(stack.length > 0){
+              links.push({from:n.id, to: stack[stack.length - 1]});
+            }
+
+            if(n.next !== "" && (n.type === 6 || n.type === 7)){
+              links.push({from:n.id, to: n.next});
+            }
 
             let expand_state = expand.none;// none, open, close
             if(n.contains.length > 0){
@@ -165,23 +179,17 @@ const getters = {
                             level_stack.push(y + 1);
                         }
                     }
-                    for(let i = n.contains.length - 1; i >= 0; i--){ // LINK
-                        links.push({from:n.id, to: n.contains[i]});
-                    }
-
-                    expand_state = expand.open;
                 }
-                else
-                {
-                    // отображать закрытой со значком +
-                    expand_state = expand.closed;
-                }
+                expand_state = expand.open;
+            }
+            else{
+                // отображать закрытой со значком +
+                expand_state = expand.closed;
             }
             v_node.expand_state = expand_state;
             v_nodes.push(v_node);
             v_nodes_map[v_node.id] = v_node;
         }
-
         let character_y = max_y + 3;
         for(let i = 1; i < v_character_order.length; i++){
             let character_id = v_character_order[i];
@@ -200,6 +208,7 @@ const getters = {
                 v_node.x = x;
                 v_node.y = character_y;
                 v_nodes.push(v_node);
+                v_nodes_map[v_node.id] = v_node;
             }
             character_y += 1;
         }
@@ -221,8 +230,30 @@ const getters = {
 
         // вычислить пути для стрелок
 
-
-        return prepare_result(v_nodes, characters);
+      //let path = 'Mx y Lx y'; // для потомков
+      /*
+      * d += "M" + (this.x(i.x1) + 8) + " " + (this.y(i.y1) + 8);
+       d += " L " + (this.x(i.x2) - 9) + " " + (this.y(i.y2) - 9);
+      * */
+      let ls = [];
+      for (let i = 0; i < links.length; i++){
+        let num = i;
+        let from = v_nodes_map[links[i].from];
+        let to = v_nodes_map[links[i].to];
+        if(from.y < to.y){
+          let path = `M ${from.x * 40} ${from.y * 40} L${to.x * 40} ${to.y * 40}`;
+          ls.push(path);
+        }
+        else if(to.y < from.y){
+          let path = `M ${from.x * 40} ${from.y * 40} L${to.x * 40} ${to.y * 40}`;
+          ls.push(path);
+        }
+        else{
+          let path = `M ${from.x * 40} ${from.y * 40} L${to.x * 40} ${to.y * 40}`;
+          ls.push(path);
+        }
+      }
+      return prepare_result(v_nodes, characters, ls);
     }
 }
 // actions
