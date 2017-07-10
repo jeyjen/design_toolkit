@@ -1,11 +1,14 @@
-export const m = {
-    project: {
-        put: 'put_project'
-    }
-}
-export const a = {
-    project:{
-        load: 'load_project',
-        common: 'common_project'
+export default {
+  app:{
+    start: 'start',
+    init: '',
+    stop: 'stop'
+  },
+  connection:{
+    _open: 'connection_open',
+    _close: 'connection_close'
+  },
+  project: {
+        _put: 'put_project'
     }
 }

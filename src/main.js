@@ -1,8 +1,13 @@
 import Vue from 'vue'
 import app from './app'
 import store from './store'
-import {m, a} from './name'
 import data from './data'
+import emit from './emit'
+
+window.onbeforeunload = ()=>{
+  emit.app.stop();
+}
+emit.app.start();
 
 Vue.config.productionTip = false
 
@@ -12,4 +17,5 @@ new Vue({
   template: '<app/>',
   components: { app }
 })
-store.commit(m.project.put, data)
+emit.project._put(data);
+//store.commit(m.project.put, data)

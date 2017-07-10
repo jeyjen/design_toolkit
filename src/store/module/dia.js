@@ -1,7 +1,4 @@
-/**
- * Created by eugene on 09.05.2017.
- */
-import {m, a} from '../../name'
+import name from '../../name'
 
 let type = {};
 type[0] = "_process";
@@ -46,12 +43,16 @@ expanded['n_20'] = true;
 expanded['n_21'] = true;
 expanded['n_22'] = true;
 
+let selected = {};
+selected['n_01'] = true;
+selected['n_02'] = true;
 
 // initial state
 const state = {
     root_character: "",
     root_node: "",
     nodes: {},
+    selected: selected,
     characters: {},
     expanded: expanded,
 };
@@ -68,7 +69,7 @@ let define_rel_node_role = (state)=>{
 }
 
 const mutations = {
-    [m.project.put] (state, prj) {
+    [name.project._put] (state, prj) {
         prj.characters.forEach((i)=>{
             state.characters[i.id] = i;
         });
@@ -258,9 +259,9 @@ const getters = {
 }
 // actions
 const actions = {
-    [a.project.load]({commit, state}, arg1){
-        // что то
-    }
+    //[a.project.load]({commit, state}, arg1){
+    //    // что то
+    //}
 }
 
 export default {
