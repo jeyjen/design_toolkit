@@ -18,5 +18,9 @@ export default {
   },
   project:{
     _put(prj){store.commit(name.project._put, prj);}
+  },
+  node:{
+    _select_main(id){store.commit(name.node._select_main, id)},
+    _select_extra(id){store.commit(name.node._select_extra, id)}
   }
 }

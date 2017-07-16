@@ -1,4 +1,6 @@
+import Vue from 'vue';
 import name from '../../name'
+
 
 let type = {};
 type[0] = "_process";
@@ -43,16 +45,16 @@ expanded['n_20'] = true;
 expanded['n_21'] = true;
 expanded['n_22'] = true;
 
-let selected = {};
-selected['n_01'] = true;
-selected['n_02'] = true;
+let selection = {};// восстанавливать из ls
+selection['n_02'] = true;
 
 // initial state
 const state = {
     root_character: "",
     root_node: "",
     nodes: {},
-    selected: selected,
+    selected_node: 'n_01',
+    extra_node_selection: selection,
     characters: {},
     expanded: expanded,
 };
@@ -89,6 +91,15 @@ const mutations = {
 
         // определить отношение между узлом и ролью
         define_rel_node_role(state);
+    },
+    [name.node._select_main](state, id){
+      state.selected_node = id;
+      state.extra_node_selection = {};
+    },
+    [name.node._select_extra](state, id){
+      if(state.selected_node !== id){
+        Vue.set(state.extra_node_selection, id, true);
+      }
     }
 }
 

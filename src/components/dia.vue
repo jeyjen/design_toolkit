@@ -62,15 +62,28 @@
                 <ellipse cx="12" cy="12" rx="9" ry="9" style="fill-opacity:.01; stroke-width:2;"></ellipse>
             </symbol>
         </svg>
-
         <svg style="width: 800px; height: 800px">
           <defs>
             <marker id="_arrow" viewBox=" 0 0 10 10" markerWidth="10" markerHeight="10" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
               <path d="M0,0 L0,6 L6,3 z" fill="red" />
             </marker>
           </defs>
-            <path v-for="path in links" :d="path" marker-end="url(#_arrow)" fill="none" stroke-width="1" stroke="black"></path>
-            <use v-for="i in nodes" :href="'#' + i.type" transform="scale(1)" :x="i.x" :y="i.y" :class="i.id in selected? 'node-selected': 'node-normal'"></use>
+            <path
+              v-for="path in links"
+              :d="path"
+              marker-end="url(#_arrow)"
+              fill="none"
+              stroke-width="1"
+              stroke="black"
+            ></path>
+            <use
+              v-for="i in nodes"
+              :href="'#' + i.type"
+              transform="scale(1)"
+              :x="i.x" :y="i.y"
+              :class="i.class"
+              @click="(e)=>{node_tap(e, i.id)}"
+            ></use>
             <text v-for="i in nodes" :x="i.x + 5" :y="i.y - 3" font-family="Verdana" font-size="10">
                 {{i.code}}
             </text>
@@ -82,15 +95,44 @@
 </template>
 <script>
     import emit from '../emit'
+
+    let expand = {
+      none: 'none',
+      open: 'opened',
+      closed: 'closed',
+    };
+
     export default {
         computed: {
             nodes(){
                 let g = this.$store.getters.graph.nodes;
+                let sn = this.$store.state.dia.selected_node;
+                let es = this.$store.state.dia.extra_node_selection;
+                //let ex = this.$store.state.dia.expanded;
+
+                let ns = [];
                 g.forEach(function(i){
-                    i.x = i.x * 40;
-                    i.y = i.y * 40;
+
+                    let v_node = {};
+                    v_node.x = i.x * 40;
+                    v_node.y = i.y * 40;
+                    v_node.id = i.id;
+                    v_node.type = i.type;
+                    v_node.code = i.code;
+
+                    v_node.class = 'node-normal';
+                    if(sn === i.id){
+                      v_node.class = 'node-main-selection';
+                    }
+                    else if(i.id in es){
+                      v_node.class = 'node-extra-selection';
+                    }
+//                    let expand_state = expand.none;// none, open, close
+//                    if(v_node.id in ex)
+//                    v_node.expand_state = expand_state;
+                  ns.push(v_node);
                 });
-                return  g;
+                return  ns;
             },
             characters(){
               let g = this.$store.getters.graph.characters;
@@ -103,15 +145,18 @@
             links(){
               return this.$store.getters.graph.links;
             },
-            selected(){
-              debugger;
-              return this.$store.state.dia.selected;
+            selection(){
+              return this.$store.state.dia.selection;
             }
         },
         methods: {
-            checkout () {
-                //this.$store.dispatch(a.project.common, {arg: 'arg1'});
-                emit.project._put({})
+            node_tap (e, id) {
+                if(e.shiftKey){
+                    emit.node._select_extra(id);
+                }
+                else{
+                    emit.node._select_main(id);
+                }
             }
         }
     }
@@ -121,7 +166,11 @@
     stroke: black;
     fill:black;
   }
-  .node-selected{
+  .node-main-selection{
+    stroke: orange;
+    fill:red
+  }
+  .node-extra-selection{
     stroke: red;
     fill:red
   }
