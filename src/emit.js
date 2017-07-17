@@ -19,8 +19,13 @@ export default {
   project:{
     _put(prj){store.commit(name.project._put, prj);}
   },
+  character:{
+    _set_root(){store.commit(name.character._set_root)},
+    _select(id){store.commit(name.character._select, id)}
+  },
   node:{
     _select_main(id){store.commit(name.node._select_main, id)},
-    _select_extra(id){store.commit(name.node._select_extra, id)}
+    _select_extra(id){store.commit(name.node._select_extra, id)},
+    _set_root(){store.commit(name.node._set_root)}
   }
 }

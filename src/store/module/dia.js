@@ -53,6 +53,7 @@ const state = {
     root_character: "",
     root_node: "",
     nodes: {},
+    selected_character: '',
     selected_node: 'n_01',
     extra_node_selection: selection,
     characters: {},
@@ -100,6 +101,17 @@ const mutations = {
       if(state.selected_node !== id){
         Vue.set(state.extra_node_selection, id, true);
       }
+    },
+    [name.character._set_root](state){
+      let ch = state.characters[state.selected_character];
+      state.root_character = state.selected_character;
+      state.root_node = ch.root_node_id;
+    },
+    [name.character._select](state, id){
+      state.selected_character = id;
+    },
+    [name.node._set_root](state){
+      state.root_node = state.selected_node;
     }
 }
 

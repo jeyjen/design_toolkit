@@ -87,10 +87,18 @@
             <text v-for="i in nodes" :x="i.x + 5" :y="i.y - 3" font-family="Verdana" font-size="10">
                 {{i.code}}
             </text>
-            <text v-for="i in characters" :x="i.x" :y="i.y" font-family="Verdana" font-size="10">
+            <text
+              v-for="i in characters"
+              :x="i.x" :y="i.y"
+              font-family="Verdana"
+              font-size="10"
+              @click="(e)=>{character_tap(e, i.id)}"
+            >
               {{i.name}}
             </text>
         </svg>
+      <div @click="character_set_root">установить персонажа</div>
+      <div @click="node_set_root">установить узел</div>
     </div>
 </template>
 <script>
@@ -109,7 +117,6 @@
                 let sn = this.$store.state.dia.selected_node;
                 let es = this.$store.state.dia.extra_node_selection;
                 //let ex = this.$store.state.dia.expanded;
-
                 let ns = [];
                 g.forEach(function(i){
 
@@ -150,14 +157,23 @@
             }
         },
         methods: {
-            node_tap (e, id) {
-                if(e.shiftKey){
-                    emit.node._select_extra(id);
-                }
-                else{
-                    emit.node._select_main(id);
-                }
+          node_tap (e, id) {
+            if(e.shiftKey){
+              emit.node._select_extra(id);
             }
+            else{
+              emit.node._select_main(id);
+            }
+          },
+          character_tap(e, id){
+            emit.character._select(id);
+          },
+          character_set_root(){
+            emit.character._set_root();
+          },
+          node_set_root(){
+            emit.node._set_root();
+          }
         }
     }
 </script>
