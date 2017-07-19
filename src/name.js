@@ -16,8 +16,7 @@ export default {
     _select: 'character_select'
   },
   node:{
-    _select_main: 'node_select_main',
-    _select_extra: 'node_select_extra',
+    _select: 'node_select',
     _set_root: 'node_set_root'
   }
 }

@@ -24,8 +24,7 @@ export default {
     _select(id){store.commit(name.character._select, id)}
   },
   node:{
-    _select_main(id){store.commit(name.node._select_main, id)},
-    _select_extra(id){store.commit(name.node._select_extra, id)},
+    _select(id, is_main){store.commit(name.node._select, {id, is_main})},
     _set_root(){store.commit(name.node._set_root)}
   }
 }

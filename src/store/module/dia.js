@@ -93,13 +93,23 @@ const mutations = {
         // определить отношение между узлом и ролью
         define_rel_node_role(state);
     },
-    [name.node._select_main](state, id){
-      state.selected_node = id;
-      state.extra_node_selection = {};
-    },
-    [name.node._select_extra](state, id){
-      if(state.selected_node !== id){
-        Vue.set(state.extra_node_selection, id, true);
+    [name.node._select](state, opt){
+      if(! opt.id){
+        state.selected_node = '';
+        state.extra_node_selection = {};
+      }
+      else if(state.selected_node === opt.id){
+        state.selected_node = '';
+      }
+      else if(opt.id in state.extra_node_selection){
+        Vue.delete(state.extra_node_selection, opt.id);
+      }
+      else if(opt.is_main){
+        state.selected_node = opt.id;
+        state.extra_node_selection = {};
+      }
+      else{
+        Vue.set(state.extra_node_selection, opt.id, true);
       }
     },
     [name.character._set_root](state){

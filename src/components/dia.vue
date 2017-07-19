@@ -62,7 +62,8 @@
                 <ellipse cx="12" cy="12" rx="9" ry="9" style="fill-opacity:.01; stroke-width:2;"></ellipse>
             </symbol>
         </svg>
-        <svg style="width: 800px; height: 800px">
+
+        <svg style="width: 800px; height: 800px; border: dashed;" @click="clear_selection">
           <defs>
             <marker id="_arrow" viewBox=" 0 0 10 10" markerWidth="10" markerHeight="10" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
               <path d="M0,0 L0,6 L6,3 z" fill="red" />
@@ -76,22 +77,23 @@
               stroke-width="1"
               stroke="black"
             ></path>
-            <use
-              v-for="i in nodes"
-              :href="'#' + i.type"
-              transform="scale(1)"
-              :x="i.x" :y="i.y"
-              :class="i.class"
-              @click="(e)=>{node_tap(e, i.id)}"
-            ></use>
-            <text v-for="i in nodes" :x="i.x + 5" :y="i.y - 3" font-family="Verdana" font-size="10">
-                {{i.code}}
-            </text>
+            <g v-for="i in nodes" @click.stop="(e)=>{node_tap(e, i.id)}">
+              <use
+                :href="'#' + i.type"
+                transform="scale(1)"
+                :x="i.x" :y="i.y"
+                :class="i.class"
+              ></use>
+              <text :x="i.x + 5" :y="i.y - 3" font-family="Verdana" font-size="10">
+                  {{i.code}}
+              </text>
+            </g>
             <text
               v-for="i in characters"
               :x="i.x" :y="i.y"
               font-family="Verdana"
               font-size="10"
+              :class="i.class"
               @click="(e)=>{character_tap(e, i.id)}"
             >
               {{i.name}}
@@ -143,11 +145,18 @@
             },
             characters(){
               let g = this.$store.getters.graph.characters;
+              let sch = this.$store.state.dia.selected_character;
+              let chs = [];
               g.forEach(function(i){
-                i.x = 0;
-                i.y = i.y * 40;
+                let ch = {};
+                ch.name = i.name;
+                ch.id = i.id;
+                ch.x = 0;
+                ch.y = i.y * 40;
+                ch.class = (sch === i.id)? 'character-selection': 'character-normal';
+                chs.push(ch);
               });
-              return  g;
+              return  chs;
             },
             links(){
               return this.$store.getters.graph.links;
@@ -159,10 +168,10 @@
         methods: {
           node_tap (e, id) {
             if(e.shiftKey){
-              emit.node._select_extra(id);
+              emit.node._select(id, false);
             }
             else{
-              emit.node._select_main(id);
+              emit.node._select(id, true);
             }
           },
           character_tap(e, id){
@@ -173,6 +182,9 @@
           },
           node_set_root(){
             emit.node._set_root();
+          },
+          clear_selection(){
+              emit.node._select();
           }
         }
     }
@@ -189,5 +201,11 @@
   .node-extra-selection{
     stroke: red;
     fill:red
+  }
+  .character-normal{
+    fill:black;
+  }
+  .character-selection{
+    fill:orange
   }
 </style>
