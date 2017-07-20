@@ -101,10 +101,42 @@
         </svg>
       <div @click="character_set_root">установить персонажа</div>
       <div @click="node_set_root">установить узел</div>
+      <pre><div v-html="hight"></div></pre>
     </div>
 </template>
 <script>
     import emit from '../emit'
+    import Prism from 'prismjs'
+
+    //поправить граматику для
+    // http://prismjs.com/extending.html#language-definitions
+    // http://prismjs.com/examples.html
+
+    Prism.languages.yaml = {
+      'prolog': /(---|\.\.\.)[^\r\n]*(\r?\n|$)/g,
+      'comment': /#[^\r\n]*(\r?\n|$)/g,
+      'number': /\b-?(0x[\dA-Fa-f]+|\d*\.?\d+)\b/g,
+      'attr-name': /[a-zA-Z0-9_-]+\:/gi,
+    };
+
+    Prism.languages.insertBefore('yaml', 'attr-name', {
+      'important': {
+        pattern: /\s+(\||\>|-)/g,
+        inside: {
+          'important': /(\||\>|-)/,
+        },
+        rest: Prism.languages.yaml
+      },
+      'keyword': /(&#38;|&amp;|&\z|\*)[\w]+/,
+    });
+
+    Prism.hooks.add('wrap', function(env) {
+      debugger;
+        if (env.token === 'entity') {
+          //env.attributes['title'] = env.content.replace(/&amp;/, '&');
+      }
+    });
+
 
     let expand = {
       none: 'none',
@@ -114,6 +146,21 @@
 
     export default {
         computed: {
+            hight(){
+              let code = `bindings:
+  - ircEvent: PRIVMSGww
+    method: newUri
+    regexp: '^http://.*'
+  - ircEvent: PRIVMSG
+    method: deleteUri
+    regexp: '^delete.*'
+  - ircEvent: PRIVMSG
+    method: randomUri
+    regexp: '^random.*'`;
+
+              let html = Prism.highlight(code, Prism.languages.yaml);
+              return html;
+            },
             nodes(){
                 let g = this.$store.getters.graph.nodes;
                 let sn = this.$store.state.dia.selected_node;

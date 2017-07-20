@@ -1,3 +1,4 @@
+import 'prismjs/themes/prism-twilight.css'
 import Vue from 'vue'
 import app from './app'
 import store from './store'
